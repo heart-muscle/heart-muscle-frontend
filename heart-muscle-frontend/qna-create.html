@@ -30,8 +30,10 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" href="imgs/instagram.png">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- JQuery-->
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <style>
 
@@ -40,119 +42,98 @@
             display: flex;
             justify-content: center;
         }
+
+        .board_create_form {
+            width: 500px;
+            margin: 50px auto 20px auto;
+        }
+
+        .desc{
+            margin-bottom: 50px;
+        }
+
+        #btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto 50px 250px;
+            font-weight: bold;
+            background-color: pink;
+            border-color: pink;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
+
     </style>
     <script>
+        let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
+        // let apiUrl = "http://localhost:8080"
         $(document).ready(function () {
-            get_board_list();
+            login_check();
         });
 
-        function toggle_like(board_id, type) {
-            console.log(board_id, type)
-            let $a_like = $(`#${board_id} a[aria-label='heart']`)
-            let $i_like = $a_like.find("i")
-            if ($i_like.hasClass("fas")) {
-                $.ajax({
-                    type: "POST",
-                    url: "/update_like",
-                    data: {
-                        board_id_give: board_id,
-                        type_give: type,
-                        action_give: "unlike"
-                    },
-                    success: function (response) {
-                        console.log("unlike")
-                        $i_like.addClass("far").removeClass("fas")
-                        $a_like.find("span.like-num").text(num2str(response["count"]))
-                    }
-                })
-            } else {
-                $.ajax({
-                    type: "POST",
-                    url: "/update_like",
-                    data: {
-                        board_id_give: board_id,
-                        type_give: type,
-                        action_give: "like"
-                    },
-                    success: function (response) {
-                        console.log("like")
-                        $i_like.addClass("fas").removeClass("far")
-                        $a_like.find("span.like-num").text(num2str(response["count"]))
-                    }
-                })
+        // function login_check(){
+        //     let check_cookie = document.cookie
+        //     if (check_cookie == '') {
+        //         alert("로그인 후 이용해 주세요!")
+        //         history.pushState(null, null, '/push')
+        //         window.location.href="/login"
+        //     }
+        // }
 
+        // $(document).ready(function () {
+        //     test = localStorage.getItem('token')
+        //     if (test == null) {
+        //         alert("로그인부터")
+        //         window.location.href="/user/login"
+        //     } else {
+        //         alert(localStorage.getItem('username'))
+        //     }
+        // });
+
+        function login_check(){
+            let check_token = localStorage.getItem('token')
+            if (check_token == null) {
+                alert("로그인부터!")
+                history.pushState(null, null, '/push')
+                window.location.href=".login.html"
             }
         }
-        apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
-        // let apiUrl = "http://localhost:8080"
-        function get_board_list() {
-            // if (userid==undefined) {
-            //     userid=""
-            // }
-            // $("#post-box").empty()
+
+        function writeDiary() {
+            // let title = $('#title').val();
+            // let content = $('#content').val();
+
+            // let data = new FormData();
+            // data.append( "title", $("#title").val() );
+            // data.append( "content", $("#content").val() );
+
+            let content = $('#content').val();
+            let title = $('#title').val();
+            let data = {'content': content, 'title': title};
             $.ajax({
-                type: "GET",
-                url: apiUrl+`qna`,
-                data: {},
+                type: "POST",
+                url: apiUrl + "qna",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                },
                 success: function (response) {
-                    console.log(response)
-                    // if (response["result"] == "success") {
+                    alert("포스팅 업데이트 성공!");
+                    window.location.reload();
+                    window.location.href='board-list.html'
 
-                    for (let i = 0; i < response.length; i++) {
-                        // let board = response[i]
-
-                        let created_at = response[i]['createdAt']
-                        let id = response[i]['id']
-                        console.log(id)
-                        let username = response[i]['username']
-                        console.log(username)
-                        let title = response[i]['title']
-                        console.log(title)
-
-                        let temp_html = `<tr id="${id}">
-                                            <th scope="row">${id}</th>
-                                            <td>${created_at}</td>
-                                            <td>${username}</td>
-                                            <td onclick="showDetail('${id}')">${title}</td>
-
-                                        </tr>`
-                        $('#post_table').append(temp_html)
-
-                    }
                 }
             })
         }
 
 
-        function showDetail(id) {
-            console.log(id)
-            window.location.href='qna-detail.html?id='+id
-        }
-
-        function updateViews(idx) {
-            $.ajax({
-                type: 'POST',
-                url: '/api/views',
-                data: {idx_give: idx},
-                success: function (response) {
-                }
-            });
-        }
-
-
-        function num2str(count) {
-            if (count > 10000) {
-                return parseInt(count / 1000) + "k"
-            }
-            if (count > 500) {
-                return parseInt(count / 100) / 10 + "k"
-            }
-            if (count == 0) {
-                return ""
-            }
-            return count
-        }
     </script>
+
+
+
 </head>
 <body>
 
@@ -161,7 +142,6 @@
 
     <header id="header">
         <section class="h_inner">
-            <div class="contents_box">
 
             <h1 class="logo">
                 <a href="index.html">
@@ -196,33 +176,8 @@
     <div id="main_container">
 
         <section class="b_inner">
-            <div class="space-medium">
-                <div class="container">
-                    <div class="row">
-                        <div class="wrap" style="width:900px;margin:auto">
-                            <a class="button is-light" id="create-button" onclick="window.location.href='board-create.html'"
-                               href="#" role="button"><i class="fas fa-pen-square"></i></a>
 
-                            <table class="table" id="table-box">
-                                <thead>
-                                <tr>
-                                    <th scope="col" style="width:50px">번호</th>
-                                    <th scope="col" style="width:100px">작성일</th>
-                                    <th scope="col" style="width:100px">작성자</th>
-                                    <th scope="col" style="width:200px">제목</th>
-                                    <!--                            <th scope="col" style="width:50px">추천</th>-->
-                                    <!--                            <th scope="col" style="width:50px">조회수</th>-->
-                                </tr>
-                                </thead>
-                                <tbody id="post_table">
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-<!--            <div class="contents_box">-->
+            <div class="contents_box">
 
 <!--                <article class="contents cont01">-->
 <!--                    <header class="top">-->
@@ -296,6 +251,27 @@
 
 
 <!--                </article>-->
+                <div class="space-medium">
+                    <div class="container">
+                        <div class="row">
+                            <div class="board_create_form">
+                                <h2 class="desc font-bold"></h2>
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1" class="font-bold">제목</label>
+                                    <input id="title" type="email" class="form-control" id="exampleFormControlInput1"
+                                           placeholder="제목을 입력하세요.">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlTextarea1" class="font-bold">내용</label>
+                                    <textarea id="content" class="form-control" id="exampleFormControlTextarea1" rows="7"
+                                              placeholder="내용을 입력하세요."></textarea>
+                                </div>
+                                <button onclick="writeDiary()" type="button" class="btn btn-primary btn-lg" class="btn" id="btn">득근 QnA 작성</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -303,10 +279,9 @@
 
 
 
-<!--            </div>-->
+            </div>
 
         </section>
-
     </div>
 
 
@@ -319,6 +294,5 @@
 <script src="https://kit.fontawesome.com/1943f1cfcb.js" crossorigin="anonymous"></script>
 
 
-<!--<script src="js/insta.js"></script>-->
 </body>
 </html>

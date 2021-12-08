@@ -7,17 +7,21 @@
 }
 
 .form_container .form{
+    display:block;
     background-color: #fff;
     border: 1px solid #e6e6e6;
-    padding: 0 40px 25px 40px;
-    margin-bottom: 30px;
+    /*padding: 0 40px 25px 40px;*/
+    /*margin-bottom: 30px;*/
+    margin: auto;
+    width: 600px;
 }
 
 
 .form .title {
-    overflow: hidden;
-    text-indent: 110%;
-    margin: 22px auto 8px;
+    /*overflow: hidden;*/
+    text-indent: 100%;
+    /*margin: 22px auto 8px;*/
+    /*width: */
 }
 
 
