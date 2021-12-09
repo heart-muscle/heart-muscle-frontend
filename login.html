@@ -62,7 +62,7 @@
                     localStorage.setItem("token", response['token']);
                     localStorage.setItem("username", response['username']);
 
-                    window.location.href = "feedList.html";
+                    window.location.href = "index.html";
                 },
                 fail: function (err) {
                     alert(JSON.stringify(err))
@@ -83,7 +83,7 @@
                         success: function (response) {
                             localStorage.setItem("token", response['token']);
                             localStorage.setItem("username", response['username']);
-                            window.location.href = "feedList.html";
+                            window.location.href = "index.html";
                         }
                     })
                 }

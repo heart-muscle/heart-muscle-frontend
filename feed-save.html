@@ -44,32 +44,15 @@
 
     <header id="header">
         <section class="h_inner">
-
-            <h1 class="logo">
                 <a href="index.html">
-                    <img src="image/logo.png">
-                    <div class="sprite_insta_icon"></div>
                     <div>
-                        <div class="sprite_write_logo"></div>
+                        <img src="imgs/logo.png">
                     </div>
                 </a>
-            </h1>
-
-            <div class="search_field">
-                <input type="text" placeholder="검색" tabindex="0">
-
-                <div class="fake_field">
-                    <span class=sprite_small_search_icon></span>
-                    <span>검색</span>
-                </div>
-            </div>
-
-
             <div class="right_icons">
-                <a href="feed-save.html"><div class="sprite_camera_icon"></div></a>
+                <a href="feed-save.html"><div class="sprite_plus_icon"></div></a>
                 <a href="login.html"><div class="sprite_compass_icon"></div></a>
-                <a href="follow.html"><div class="sprite_heart_icon_outline"></div></a>
-                <a href="profile.html"><div class="sprite_user_icon_outline"></div></a>
+                <a onclick="mypage()"><div class="sprite_user_icon_outline"></div></a>
             </div>
         </section>
     </header>
@@ -90,7 +73,7 @@
                                 <span></span>
                                 <span></span>
                             </div>
-                            <p>포스트 이미지 추가</p>
+                            <p>피드 이미지 추가</p>
                             <canvas id="imageCanvas"></canvas>
                             <!--<p><img id="img_id" src="#" style="width: 300px; height: 300px; object-fit: cover" alt="thumbnail"></p>-->
                         </div>
@@ -107,7 +90,7 @@
                     <input type="checkbox" name="workout" value="요가" />요가
                     <input type="checkbox" name="workout" value="필라테스" />필라테스
                     <input type="checkbox" name="workout" value="스트레칭" />스트레칭
-                    <button type="button" class="tag_btn" onclick="addTag()">운동 기록 추가하기</button>
+                    <button type="button" class="select_btn" onclick="addTag()">운동 기록 추가하기</button>
                 </p>
                 <p>
                     <textarea name="content" id="content" cols="50" rows="5" placeholder="140자 까지 등록 가능합니다"></textarea>
@@ -206,6 +189,12 @@
             }
             $("#tags").val(workoutTags);
         }
+    }
+
+    function mypage() {
+        username = localStorage.getItem('username')
+        console.log(username)
+        window.location.href = 'profile.html?id=' + username
     }
 </script>
 
