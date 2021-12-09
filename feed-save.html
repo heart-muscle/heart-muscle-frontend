@@ -63,9 +63,6 @@
 
         <div class="post_form_container">
             <form action="#" class="post_form">
-                <div class="title">
-                    득근 피드
-                </div>
                 <div class="preview">
                     <div class="upload">
                         <div class="post_btn">
@@ -83,17 +80,19 @@
                     <input type="file" name="file" id="image" required="required">
                 </p>
                 <p>
-                    <textarea type="text" value="" id="title" class="form-control" placeholder="제목여기"></textarea>
+                    <textarea type="text" value="" id="title" class="form-control" placeholder="제목을 입력해주세요"></textarea>
                 </p>
                 <p>
-                    <textarea type="text" value="" id="tags" data-role="tagsinput" placeholder="운동 기록 태그"></textarea>
+                    <textarea type="text" value="" id="tags" data-role="tagsinput" placeholder="오늘의 운동 기록을 선택해주세요!"></textarea>
+                    <input type="checkbox" name="workout" value="헬스" />헬스
                     <input type="checkbox" name="workout" value="요가" />요가
+                    <input type="checkbox" name="workout" value="러닝" />러닝
                     <input type="checkbox" name="workout" value="필라테스" />필라테스
                     <input type="checkbox" name="workout" value="스트레칭" />스트레칭
                     <button type="button" class="select_btn" onclick="addTag()">운동 기록 추가하기</button>
                 </p>
                 <p>
-                    <textarea name="content" id="content" cols="50" rows="5" placeholder="140자 까지 등록 가능합니다"></textarea>
+                    <textarea name="content" id="content" cols="50" rows="5" placeholder="내용을 입력해주세요. 140자 까지 등록 가능합니다"></textarea>
                 </p>
                 <button type="button" class="submit_btn" onclick="feedSave()">저장하기</button>
             </form>

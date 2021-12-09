@@ -270,7 +270,22 @@ body{
 .contents .comment_container .comment{
     display:flex;
     flex-direction: column;
-    font-size: 14px;
+    font-size: 15px;
+    padding-left: 15px;
+}
+
+.contents .comment_container .content{
+    display:flex;
+    flex-direction: column;
+    font-size: 18px;
+    padding: 12px;
+}
+
+.contents .comment_container .title{
+    display:flex;
+    flex-direction: column;
+    font-size: 22px;
+    padding: 10px;
 }
 
 .contents .comment_container .comment-detail{
