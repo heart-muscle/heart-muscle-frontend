@@ -9,19 +9,28 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/image.css">
+
 
   <!-- JQuery-->
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <script src="/js/jquery.twbsPagination.js"></script> <!-- jQuery -->
+  <script src="/js/jquery-3.6.0.min.js"></script> <!-- Bootstrap -->
+  <script src="/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/css/bootstrap.min.css"/>
 
 
 </head>
 
 <script>
 
+  // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
+  let apiUrl = "http://localhost:8080"
+
   $(document).ready(function () {
     feed_list();
-    alert("짠");
   });
 
   function feed_list() {
@@ -30,7 +39,7 @@
 
     $.ajax({
       type: "GET",
-      url: `/feed`,
+      url: apiUrl + `/feed`,
       success: function (response) {
         console.log(response)
 
@@ -38,72 +47,32 @@
           let title = response[i]['title']
           let id = response[i]['id']
           let url = response[i]['imageUrl']
+          let createdAt = response[i]['createdAt']
+          let username = response[i]['username']
           console.log(id)
 
           let tempHtml = `
                                     <article class="contents">
                                         <header class="top">
                                             <div class="user_container">
-                                                <div class="profile_img">
-                                                    <img src="imgs/thumb.jpeg" alt="프로필이미지">
-                                                </div>
-                                                <div class="user_name">
-                                                    <div class="nick_name m_text">KindTiger</div>
-                                                    <div class="country s_text">Seoul, South Korea</div>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="sprite_more_icon" data-name="more">
-                                                <ul class="toggle_box">
-                                                    <li><input type="submit" class="follow" value="팔로우" data-name="follow"></li>
-                                                    <li>수정</li>
-                                                    <li>삭제</li>
-                                                </ul>
                                             </div>
                                         </header>
 
                                         <div class="img_section">
                                             <div class="trans_inner">
-                                                <div><img src="${url}" class="card-img-top" alt="..."></div>
+                                                <div><img src="${url}" class="card-img-top image-size" alt="..."></div>
                                             </div>
-                                        </div>
-
-                                        <div class="bottom_icons">
-                                            <div class="left_icons">
-                                                <div class="heart_btn">
-                                                    <div class="sprite_heart_icon_outline" name="39" data-name="heartbeat"></div>
-                                                </div>
-                                                <div class="sprite_bubble_icon"></div>
-                                                <div class="sprite_share_icon" data-name="share"></div>
-                                            </div>
-                                            <div class="right_icon">
-                                                <div class="sprite_bookmark_outline" data-name="bookmark"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="likes m_text">
-                                            좋아요
-                                            <span id="like-count-39">2,346</span>
-                                            개
                                         </div>
 
                                         <div class="comment_container">
                                             <div class="comment" id="comment-list-ajax-post37">
+                                                <div class="user_name">
+                                                    <div class="nick_name m_text"><a href="profile.html?id=${username}">${username}</a></div>
+                                                </div>
                                                 <div class="comment-detail">
                                                     <div class="nick_name m_text"><a href="feedDetail.html?id=${id}">${title}</a></div>
                                                 </div>
                                             </div>
-                                            <div class="small_heart">
-                                                <div class="sprite_small_heart_icon_outline"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="timer">1시간 전</div>
-
-                                        <div class="comment_field" id="add-comment-post37">
-                                            <input type="text" placeholder="댓글달기...">
-                                            <div class="upload_btn m_text" data-name="comment">게시</div>
                                         </div>
                                     </article>
                                     `
@@ -112,6 +81,43 @@
         }
       }
     })
+  }
+
+  // function getTime(createAt) {
+  //   let today = new Date()
+  //   var hours = ('0' + today.getHours()).slice(-2);
+  //   var minutes = ('0' + today.getMinutes()).slice(-2);
+  //   var seconds = ('0' + today.getSeconds()).slice(-2);
+  //
+  //   var timeString = hours + ':' + minutes  + ':' + seconds;
+  //
+  //   console.log(timeString)
+  //   console.log(createAt)
+  //   // console.log(today.toLocaleTimeString())
+  //   // let time = today - createAt;
+  //   console.log(today)
+  // }
+
+  // window.pagObj = $('#pagination').twbsPagination({
+  //   totalPages: [[${dataListPage.totalPages}]],
+  //   startPage: parseInt([[${dataListPage.number}]] + 1),
+  //   visiblePages: 2,
+  //   prev: "‹",
+  //   next: "›",
+  //   first: '«',
+  //   last: '»',
+  //   onPageClick: function (event, page) {
+  //     console.info("current page : " + page);
+  //   }
+  // }).on('page', function (event, page) {
+  //   searchDataList(page);
+  // });
+
+
+  function mypage() {
+    username = localStorage.getItem('username')
+    console.log(username)
+    window.location.href = 'profile.html?id=' + username
   }
 
 </script>
@@ -141,233 +147,23 @@
       </div>
 
       <div class="right_icons">
-        <a href="new_post.html"><div class="sprite_camera_icon"></div></a>
+        <a href="feedSave.html"><div class="sprite_camera_icon"></div></a>
         <a href="login.html"><div class="sprite_compass_icon"></div></a>
         <a href="follow.html"><div class="sprite_heart_icon_outline"></div></a>
-        <a href="profile.html"><div class="sprite_user_icon_outline"></div></a>
+        <a onclick="mypage()"><div class="sprite_user_icon_outline"></div></a>
       </div>
 
     </section>
 
   </header>
 
-  <div class="hidden_menu">
-    <div class="scroll_inner">
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-
-    </div>
-  </div>
-
-
   <section id="main_container">
-    <div class="inner">
+    <div style="margin: auto">
 
-      <div class="contents_box" id="feed">
-
-        <article class="contents">
-          <header class="top">
-            <div class="user_container">
-              <div class="profile_img">
-                <img src="imgs/thumb.jpeg" alt="프로필이미지">
-              </div>
-              <div class="user_name">
-                <div class="nick_name m_text">KindTiger</div>
-                <div class="country s_text">Seoul, South Korea</div>
-              </div>
-
-            </div>
-
-            <div class="sprite_more_icon" data-name="more">
-              <ul class="toggle_box">
-                <li><input type="submit" class="follow" value="팔로우" data-name="follow"></li>
-                <li>수정</li>
-                <li>삭제</li>
-              </ul>
-            </div>
-          </header>
-
-          <div class="img_section">
-            <div class="trans_inner">
-              <div><img src="imgs/img_section/img01.jpg" alt="visual01"></div>
-            </div>
-          </div>
-
-          <div class="bottom_icons">
-            <div class="left_icons">
-              <div class="heart_btn">
-                <div class="sprite_heart_icon_outline" name="39" data-name="heartbeat"></div>
-              </div>
-              <div class="sprite_bubble_icon"></div>
-              <div class="sprite_share_icon" data-name="share"></div>
-            </div>
-            <div class="right_icon">
-              <div class="sprite_bookmark_outline" data-name="bookmark"></div>
-            </div>
-          </div>
-
-          <div class="likes m_text">
-            좋아요
-            <span id="like-count-39">2,346</span>
-            개
-          </div>
-
-          <div class="comment_container">
-            <div class="comment" id="comment-list-ajax-post37">
-              <div class="comment-detail">
-                <div class="nick_name m_text">dongdong2</div>
-                <div>강아지가 너무 귀여워요~!</div>
-              </div>
-            </div>
-            <div class="small_heart">
-              <div class="sprite_small_heart_icon_outline"></div>
-            </div>
-          </div>
-
-          <div class="timer">1시간 전</div>
-
-          <div class="comment_field" id="add-comment-post37">
-            <input type="text" placeholder="댓글달기...">
-            <div class="upload_btn m_text" data-name="comment">게시</div>
-          </div>
-        </article>
-
-
+      <div class="contents_box" id="feed" style="align-content: center">
       </div>
+
       <input type="hidden" id="page" value="1">
-
-      <div class="side_box">
-        <div class="user_profile">
-          <div class="profile_thumb">
-            <img src="imgs/thumb.jpeg" alt="프로필사진">
-          </div>
-          <div class="detail">
-            <div class="id m_text">KindTiger</div>
-            <div class="ko_name">심선범</div>
-          </div>
-        </div>
-
-        <article class="story">
-          <header class="story_header">
-            <div>스토리</div>
-            <div class="more">모두 보기</div>
-          </header>
-
-          <div class="scroll_inner">
-            <div class="thumb_user">
-              <div class="profile_thumb">
-                <img src="imgs/thumb02.jpg" alt="프로필사진">
-              </div>
-              <div class="detail">
-                <div class="id">kind_tigerrrr</div>
-                <div class="time">1시간 전</div>
-              </div>
-            </div>
-            <div class="thumb_user">
-              <div class="profile_thumb">
-                <img src="imgs/thumb02.jpg" alt="프로필사진">
-              </div>
-              <div class="detail">
-                <div class="id">kind_tigerrrr</div>
-                <div class="time">1시간 전</div>
-              </div>
-            </div>
-            <div class="thumb_user">
-              <div class="profile_thumb">
-                <img src="imgs/thumb02.jpg" alt="프로필사진">
-              </div>
-              <div class="detail">
-                <div class="id">kind_tigerrrr</div>
-                <div class="time">1시간 전</div>
-              </div>
-            </div>
-            <div class="thumb_user">
-              <div class="profile_thumb">
-                <img src="imgs/thumb02.jpg" alt="프로필사진">
-              </div>
-              <div class="detail">
-                <div class="id">kind_tigerrrr</div>
-                <div class="time">1시간 전</div>
-              </div>
-            </div>
-            <div class="thumb_user">
-              <div class="profile_thumb">
-                <img src="imgs/thumb02.jpg" alt="프로필사진">
-              </div>
-              <div class="detail">
-                <div class="id">kind_tigerrrr</div>
-                <div class="time">1시간 전</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="recommend">
-          <header class="reco_header">
-            <div>회원님을 위한 추천</div>
-            <div class="more">모두 보기</div>
-          </header>
-
-          <div class="thumb_user">
-            <div class="profile_thumb">
-              <img src="imgs/thumb02.jpg" alt="프로필사진">
-            </div>
-            <div class="detail">
-              <div class="id">kind_tigerrrr</div>
-              <div class="time">1시간 전</div>
-            </div>
-          </div>
-          <div class="thumb_user">
-            <div class="profile_thumb">
-              <img src="imgs/thumb02.jpg" alt="프로필사진">
-            </div>
-            <div class="detail">
-              <div class="id">kind_tigerrrr</div>
-              <div class="time">1시간 전</div>
-            </div>
-          </div>
-        </article>
-      </div>
-
 
     </div>
   </section>
