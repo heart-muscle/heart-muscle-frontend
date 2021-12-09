@@ -23,6 +23,10 @@
     <!--    <script type="application/javascript" src="../static/js/login.js"></script>-->
 
     <script>
+
+        // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
+        let apiUrl = "http://localhost:8080"
+
         function login() {
             let userid = $("#username").val()
             let password = $("#password").val()
@@ -51,7 +55,7 @@
             }
             $.ajax({
                 type: 'POST',
-                url: `/login`,
+                url: apiUrl + `/login`,
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (response) {

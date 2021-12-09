@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/image.css">
 
+
   <!-- JQuery-->
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -19,6 +20,9 @@
 </head>
 
 <script>
+
+  // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
+  let apiUrl = "http://localhost:8080"
 
   $(document).ready(function () {
     feed_list();
@@ -30,7 +34,7 @@
 
     $.ajax({
       type: "GET",
-      url: `/feed`,
+      url: apiUrl + `/feed`,
       success: function (response) {
         console.log(response)
 

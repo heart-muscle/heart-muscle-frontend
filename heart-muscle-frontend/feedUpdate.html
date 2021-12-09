@@ -113,6 +113,9 @@
 
 <script>
 
+    // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
+    let apiUrl = "http://localhost:8080"
+
     // $(document).ready(function () {
     //     test = localStorage.getItem('token')
     //     username = localStorage.getItem('username')
@@ -138,7 +141,7 @@
     function getFeed() {
         $.ajax({
             type: "GET",
-            url: `/feed/${id}`,
+            url: apiUrl + `/feed/${id}`,
             success: function (response) {
                 console.log(response);
 
@@ -160,7 +163,7 @@
 
         $.ajax({
             type: "PUT",
-            url: `/feed/${id}`,
+            url: apiUrl + `/feed/${id}`,
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data),
             // 토큰값 같이 가져가는 부분

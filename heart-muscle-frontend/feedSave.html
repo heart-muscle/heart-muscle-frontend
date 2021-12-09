@@ -126,6 +126,9 @@
 <!--<script src="js/insta.js"></script>-->
 <script>
 
+    // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
+    let apiUrl = "http://localhost:8080"
+
     $(document).ready(function () {
         test = localStorage.getItem('token')
         nowUsername = localStorage.getItem('username')
@@ -177,7 +180,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/feed",
+            url: apiUrl + "/feed",
             processData: false,
             contentType: false,
             data: data,

@@ -19,6 +19,9 @@
 
 <script>
 
+    // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
+    let apiUrl = "http://localhost:8080"
+
     $(document).ready(function () {
         id = getParam('id');
         console.log(id)
@@ -31,7 +34,7 @@
     function checkUser() {
         $.ajax({
             type: "GET",
-            url: `/feed/check/${id}`,
+            url: apiUrl + `/feed/check/${id}`,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
             },
@@ -76,7 +79,7 @@
     function getFeed() {
         $.ajax({
             type: "GET",
-            url: `/feed/${id}`,
+            url: apiUrl + `/feed/${id}`,
             success: function (response) {
                 // console.log("nowID:", response[user_id]);
 
@@ -101,7 +104,7 @@
         console.log(comment)
         $.ajax({
             type: "POST",
-            url: `/feed/comment`,
+            url: apiUrl + `/feed/comment`,
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(comment),
             success: function (response) {
@@ -133,7 +136,7 @@
     function feedDelete() {
         $.ajax({
             type: "DELETE",
-            url: `/feed/${id}`,
+            url: apiUrl + `/feed/${id}`,
             success: function (response) {
                 alert("피드가 삭제되었습니다!");
                 window.location.href = "/feedList.html"

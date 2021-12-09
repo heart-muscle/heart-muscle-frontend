@@ -12,6 +12,10 @@
     <link rel="stylesheet" type="text/css" href="../css/register.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+
+        // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
+        let apiUrl = "http://localhost:8080"
+
         let id_check = false
 
         function is_email(asValue){
@@ -107,7 +111,7 @@
             }
             $.ajax({
                 type: 'POST',
-                url: `/signup`,
+                url: apiUrl + `/signup`,
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (response) {
@@ -118,7 +122,7 @@
         }
         function checkSignup() {
             $.ajax({ type: 'POST',
-                url: '/checkSignup',
+                url: apiUrl + '/checkSignup',
                 data: { "id" : $('#username').val() },
                 success: function(data) {
                     console.log(data)
