@@ -31,8 +31,80 @@
     <link rel="stylesheet" href="css/profile.css">
     <link rel="shortcut icon" href="imgs/instagram.png">
 
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+    <!-- 합쳐지고 최소화된 최신 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- 부가적인 테마 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 </head>
+
+<script>
+
+    // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
+    let apiUrl = "http://localhost:8080"
+
+    var search = location.search
+    console.log("search: ", search)
+    var params = new URLSearchParams(search);
+    console.log("params: ", params)
+    var id = params.get('id');
+    console.log("getType: ", id)
+
+    $(document).ready(function () {
+        getUser(id);
+    })
+
+    function getUser() {
+        $.ajax({
+            type: "GET",
+            url: apiUrl + `/user/${id}`,
+            success: function (response) {
+                console.log("유저테이블가져오기", response)
+                feed = response['feeds']
+                feedCount = response['feeds'].length;
+                username = response['username']
+
+                console.log("feedLength", feedCount)
+
+                $("#nickname").html(response['nickname']);
+                $("#image").attr("src", response['imgUrl']);
+                $("#feedCount").html(response['feeds'].length);
+
+                for (let i = 0; i < feed.length; i++) {
+                    let url = feed[i]['imageUrl']
+                    console.log("url", url)
+
+                    let tempHtml = `
+                                    <div class="pic">
+                                        <a href="#"><img src="${url}" alt=""></a>
+                                    </div>
+                                    `
+
+                    $('#userFeed').append(tempHtml)
+                }
+            }
+        })
+
+    }
+
+    function edit() {
+        window.location.href = 'profile_edit.html?id=' + id
+    }
+
+    function logout(){
+        localStorage.clear()
+        window.location.href="login.html"
+    }
+
+</script>
+
 <body>
 
 
@@ -61,7 +133,7 @@
 
 
             <div class="right_icons">
-                <a href="new_post.html"><div class="sprite_camera_icon"></div></a>
+                <a href="feedSave.html"><div class="sprite_camera_icon"></div></a>
                 <a href="login.html"><div class="sprite_compass_icon"></div></a>
                 <a href="qna-list.html"><div class="sprite_bubble_icon"></div></a>
                 <a href="follow.html"><div class="sprite_heart_icon_outline"></div></a>
@@ -78,106 +150,52 @@
             <div class="hori_cont">
                 <div class="profile_wrap">
                     <div class="profile_img">
-                        <img src="imgs/thumb.jpeg" alt="착한호랑이">
+                        <img id="image" alt="착한호랑이">
                     </div>
                 </div>
 
                 <div class="detail">
                     <div class="top">
-                        <div class="user_name">KindTiger</div>
-                        <a href="profile_edit.html" class="profile_edit">프로필편집</a>
-                        <a href="#" class="logout">로그아웃</a>
+                        <div class="user_name" id="nickname">KindTiger</div>
+                        <!--                        <a onclick="edit()" class="profile_edit">프로필편집</a>-->
+                        <!--                        <a class="logout" onclick="logout()">로그아웃</a>-->
+                        <i class="fas fa-cog fa-2x" data-toggle="modal" data-target="#exampleModal"></i>
                     </div>
 
                     <ul class="middle">
                         <li>
                             <span>게시물</span>
-                            3
-                        </li>
-                        <li>
-                            <span>팔로워</span>
-                            3
-                        </li>
-                        <li>
-                            <span>팔로우</span>
-                            3
+                            <div id="feedCount"></div>
                         </li>
                     </ul>
-                    <p class="about">
-                        <span class="nick_name">kindtigerrr</span>
-                        <span class="book_mark">bookmark</span>
-                    </p>
-
                 </div>
             </div>
 
-            <div class="mylist_contents contents_container active">
-                <div class="pic">
-                    <a href="#"><img src="imgs/img_section/img01.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"><img src="imgs/img_section/img02.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img03.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img02.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img03.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img01.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img02.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img03.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img01.jpg" alt=""></a>
-                </div>
+            <div class="mylist_contents contents_container active" id="userFeed">
             </div>
-
-
-            <div class="bookmark_contents contents_container">
-                <div class="pic">
-                    <a href="#"><img src="imgs/img_section/img03.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"><img src="imgs/img_section/img01.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img02.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img01.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img02.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img03.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img01.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img02.jpg" alt=""></a>
-                </div>
-                <div class="pic">
-                    <a href="#"> <img src="imgs/img_section/img02.jpg" alt=""></a>
-                </div>
-            </div>
-
-
-
 
         </section>
     </div>
 
+
+    <!-- Button trigger modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">User Setting</h3>
+                </div>
+                <div class="modal-body">
+                    <a onclick="edit()" class="profile_edit">프로필편집</a><hr>
+                    <a class="logout" onclick="logout()">로그아웃</a>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
 
 </section>
 
