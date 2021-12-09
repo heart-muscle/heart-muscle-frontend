@@ -43,6 +43,19 @@
     <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+    <style>
+        @font-face {
+            font-family: 'IM_Hyemin-Bold';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .font {
+            font-family: 'IM_Hyemin-Bold'; !important;
+        }
+    </style>
+
 </head>
 
 <script>
@@ -156,15 +169,15 @@
 
                 <div class="detail">
                     <div class="top">
-                        <div class="user_name" id="nickname">KindTiger</div>
+                        <div class="user_name font" id="nickname"></div>
                         <!--                        <a onclick="edit()" class="profile_edit">프로필편집</a>-->
                         <!--                        <a class="logout" onclick="logout()">로그아웃</a>-->
                         <i class="fas fa-cog fa-2x" data-toggle="modal" data-target="#exampleModal"></i>
                     </div>
 
-                    <ul class="middle">
+                    <ul class="middle font">
                         <li>
-                            <span>게시물</span>
+                            <p>게시물</p>
                             <div id="feedCount"></div>
                         </li>
                     </ul>

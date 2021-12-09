@@ -73,6 +73,18 @@
     z-index: 1;
     position: relative;
   }
+
+  @font-face {
+    font-family: 'IM_Hyemin-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  .button-48 {
+    font-family: 'IM_Hyemin-Bold'; !important;
+  }
+
 </style>
 </head>
 
@@ -98,14 +110,14 @@
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
       },
       success: function (response) {
-        alert(response)
         if ( response === "true") {
-          let tempHtml = `
-<!--                                    <button class="submit_btn" onclick="feedUpdate()">수정하기</button>-->
-                                    <button class="button-48" role="button"><span class="text" onclick="feedUpdate()">수정하기</span></button>
-                                    <button class="button-48" role="button"><span class="text" onclick="feedDelete()">삭제하기</span></button>
-<!--                                    <button class="submit_btn" onclick="feedDelete()">삭제하기</button>-->
-                                    `
+          let tempHtml = `<div>
+                                <!-- <button class="submit_btn" onclick="feedUpdate()">수정하기</button>-->
+                              <button class="button-48" role="button"><span class="text" onclick="feedUpdate()">수정하기</span></button>
+                              <button class="button-48" role="button"><span class="text" onclick="feedDelete()">삭제하기</span></button>
+                                <!-- <button class="submit_btn" onclick="feedDelete()">삭제하기</button>-->
+                          </div>
+                          `
           $('#update').append(tempHtml)
         } else {}
       }
@@ -230,68 +242,18 @@
     </section>
   </header>
 
-  <div class="hidden_menu">
-    <div class="scroll_inner">
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-      <div class="user">
-        <div class="thumb_img"><img src="imgs/thumb.jpeg" alt="프로필사진"></div>
-        <div class="id">kindtigerrr</div>
-      </div>
-
-    </div>
-  </div>
-
-
   <section id="main_container">
-    <div class="inner">
+    <center>
+      <div class="inner">
 
       <div class="contents_box" id="feed">
         <article class="contents">
           <header class="top">
-            <div class="user_container">
-              <div class="profile_img">
-                <img src="imgs/thumb.jpeg" alt="프로필이미지">
+            <div class="user_container" style="padding: 15px">
+              <div class="sprite_user_icon_outline"></div>
+              <div class="comment_container">
+                <div class="comment" id="username"></div>
               </div>
-              <div class="user_name">
-                <div class="nick_name m_text" id="username"></div>
-              </div>
-
             </div>
 
             <div class="sprite_more_icon" data-name="more">
@@ -310,24 +272,26 @@
           </div>
 
           <div class="comment_container">
-            <div class="comment" id="comment-list-ajax-post37">
-              <div class="comment-detail">
+            <div class="title">
+              <div class="">
                 <div id="title"></div>
               </div>
             </div>
           </div>
 
           <div class="comment_container">
-            <div class="comment" id="comment-list-ajax-post37">
-              <div class="comment-detail">
+            <div class="content">
+              <div class="">
                 <div id="content"></div>
               </div>
             </div>
           </div>
 
-          <div id="comment-list"></div>
+          <div style="padding: 5px">
+            <div id="comment-list"></div>
+          </div>
 
-          <div class="comment_field" id="add-comment-post37">
+          <div class="comment_field">
             <input type="text" id="comment" placeholder="댓글달기...">
             <div class="upload_btn m_text" data-name="comment" onclick="writeComment()">게시</div>
           </div>
@@ -341,7 +305,7 @@
       </div>
       <input type="hidden" id="page" value="1">
     </div>
-
+    </center>
   </section>
 
 </section>

@@ -21,6 +21,19 @@
   <script src="/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="/css/bootstrap.min.css"/>
 
+<!--  <style>-->
+<!--    @font-face {-->
+<!--      font-family: 'IM_Hyemin-Bold';-->
+<!--      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');-->
+<!--      font-weight: normal;-->
+<!--      font-style: normal;-->
+<!--    }-->
+
+<!--    *{-->
+<!--      font-family: 'IM_Hyemin-Bold'; !important;-->
+<!--    }-->
+<!--  </style>-->
+
 
 </head>
 
@@ -30,8 +43,18 @@
   let apiUrl = "http://localhost:8080"
 
   $(document).ready(function () {
-    feed_list();
+      login_check();
+      feed_list();
   });
+
+  function login_check(){
+      let check_token = localStorage.getItem('token')
+      if (check_token == null) {
+          alert("로그인부터!")
+          history.pushState(null, null, '/push')
+          window.location.href="login.html"
+      }
+  }
 
   function feed_list() {
 
@@ -53,24 +76,17 @@
 
           let tempHtml = `
                                     <article class="contents">
-                                        <header class="top">
-                                            <div class="user_container">
-                                            </div>
-                                        </header>
-
                                         <div class="img_section">
                                             <div class="trans_inner">
-                                                <div><img src="${url}" class="card-img-top image-size" alt="..."></div>
+                                                <div><a onclick="getDetail('${id}')"><img src="${url}" class="card-img-top image-size" alt="..."></a></div>
                                             </div>
                                         </div>
 
                                         <div class="comment_container">
                                             <div class="comment" id="comment-list-ajax-post37">
-                                                <div class="user_name">
-                                                    <div class="nick_name m_text"><a href="profile.html?id=${username}">${username}</a></div>
-                                                </div>
                                                 <div class="comment-detail">
-                                                    <div class="nick_name m_text"><a href="feed-detail.html?id=${id}">${title}</a></div>
+                                                    <div class="title"><a href="profile.html?id=${username}">${username}</a></div>
+                                                    <div class="title">${title}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -120,6 +136,11 @@
     window.location.href = 'profile.html?id=' + username
   }
 
+  function getDetail(id) {
+    console.log('id', id)
+    window.location.href = 'feed-detail.html?id=' + id
+  }
+
 </script>
 <body>
 
@@ -143,9 +164,9 @@
   </header>
 
   <section id="main_container">
-    <div style="margin: auto">
+    <div>
 
-      <div class="contents_box" id="feed" style="align-content: center">
+      <div class="contents_box" id="feed">
       </div>
 
       <input type="hidden" id="page" value="1">
