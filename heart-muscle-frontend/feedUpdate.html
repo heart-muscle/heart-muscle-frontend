@@ -29,12 +29,11 @@
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/new_post.css">
+    <link rel="stylesheet" href="css/image.css">
     <link rel="shortcut icon" href="image/logo.png">
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-<!--    <script defer src="js/new_post.js"></script>-->
 
 </head>
 
@@ -47,7 +46,6 @@
 
             <h1 class="logo">
                 <a href="index.html">
-                    <img src="image/logo.png">
                     <div class="sprite_insta_icon"></div>
                     <div>
                         <div class="sprite_write_logo"></div>
@@ -66,7 +64,7 @@
 
 
             <div class="right_icons">
-                <a href="new_post.html"><div class="sprite_camera_icon"></div></a>
+                <a href="feedSave.html"><div class="sprite_camera_icon"></div></a>
                 <a href="login.html"><div class="sprite_compass_icon"></div></a>
                 <a href="follow.html"><div class="sprite_heart_icon_outline"></div></a>
                 <a href="profile.html"><div class="sprite_user_icon_outline"></div></a>
@@ -84,35 +82,26 @@
                     NEW POST
                 </div>
                 <div class="preview">
+
                     <div class="upload">
                         <div class="post_btn">
-                            <div class="plus_icon">
-                                <span></span>
-                                <span></span>
-                            </div>
-                            <p>포스트 이미지 추가</p>
-                            <canvas id="imageCanvas"></canvas>
-                            <!--<p><img id="img_id" src="#" style="width: 300px; height: 300px; object-fit: cover" alt="thumbnail"></p>-->
+                            <img class="image-view" id="image" alt="visual01">
                         </div>
                     </div>
+
                 </div>
-                <p>
-                    <input type="file" name="file" id="image" required="required">
-                </p>
                 <p>
                     <textarea type="text" value="" id="title" class="form-control" placeholder="제목여기"></textarea>
                 </p>
                 <p>
-                    <textarea type="text" value="" id="tags" data-role="tagsinput" placeholder="운동 기록 태그"></textarea>
-                    <input type="checkbox" name="workout" value="요가" />요가
-                    <input type="checkbox" name="workout" value="필라테스" />필라테스
-                    <input type="checkbox" name="workout" value="스트레칭" />스트레칭
-                    <button type="button" class="tag_btn" onclick="addTag()">운동 기록 추가하기</button>
+<!--                    <textarea type="text" value="" data-role="tagsinput" placeholder="운동 기록 태그">-->
+                        <div id="tags"></div>
+<!--                    </textarea>-->
                 </p>
                 <p>
-                    <textarea name="content" id="content" cols="50" rows="5" placeholder="140자 까지 등록 가능합니다"></textarea>
+                    <textarea name="content" value="" id="content" cols="50" rows="5" placeholder="140자 까지 등록 가능합니다"></textarea>
                 </p>
-                <button type="button" class="submit_btn" onclick="feedSave()">저장하기</button>
+                <button type="button" class="submit_btn" onclick="feedUpdate()">저장하기</button>
             </form>
 
         </div>
@@ -122,62 +111,58 @@
 
 </section>
 
-<!--js파일 경로-->
-<!--<script src="js/insta.js"></script>-->
 <script>
 
+    // $(document).ready(function () {
+    //     test = localStorage.getItem('token')
+    //     username = localStorage.getItem('username')
+    //     if (test == null) {
+    //         alert("테스트지롱")
+    //     } else {
+    //         alert(localStorage.getItem('username'))
+    //     }
+    // });
+
     $(document).ready(function () {
-        test = localStorage.getItem('token')
-        if (test == null) {
-            alert("테스트지롱")
-            window.location.href="/user/login"
-        }
-        // else {
-        //     alert(localStorage.getItem('username'))
-        // }
-    });
+        id = getParam('id');
+        console.log(id)
+        getFeed(id);
+    })
 
-    var fileInput  = document.querySelector( "#image" ),
-        button     = document.querySelector( ".input-file-trigger" ),
-        the_return = document.querySelector(".file-return");
-
-    // Show image
-    fileInput.addEventListener('change', handleImage, false);
-    var canvas = document.getElementById('imageCanvas');
-    var ctx = canvas.getContext('2d');
-
-
-    function handleImage(e){
-        var reader = new FileReader();
-        reader.onload = function(event){
-            var img = new Image();
-            // var imgWidth =
-            img.onload = function(){
-                canvas.width = 300;
-                canvas.height = 300;
-                ctx.drawImage(img,0,0,300,300);
-            };
-            img.src = event.target.result;
-            // img.width = img.width*0.5
-            // canvas.height = img.height;
-        };
-        reader.readAsDataURL(e.target.files[0]);
+    function getParam(name) {
+        var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+        console.log(results)
+        return results[1] || 0;
     }
 
-    function feedSave() {
-        var data = new FormData();
-        data.append("title", $("#title").val());
-        data.append("content", $("#content").val());
-        data.append("tags", $("#tags").val());
-        if (typeof $("#image")[0].files[0] != 'undefined') data.append("image", $("#image")[0].files[0]);
+    function getFeed() {
+        $.ajax({
+            type: "GET",
+            url: `/feed/${id}`,
+            success: function (response) {
+                console.log(response);
 
+                $("#title").html(response['title']);
+                $("#content").html(response['content']);
+                $("#tags").html(response['tags']);
+                $("#image").attr("src",response['imageUrl']);
+
+            }
+        })
+
+    }
+
+    function feedUpdate() {
+        let data = {
+            "title": $("#title").val(),
+            "content": $("#content").val()
+        }
 
         $.ajax({
-            type: "POST",
-            url: "/feed",
-            processData: false,
-            contentType: false,
-            data: data,
+            type: "PUT",
+            url: `/feed/${id}`,
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
             // 토큰값 같이 가져가는 부분
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
@@ -190,18 +175,9 @@
     }
 
 
-    function addTag() {
-        var workoutTag = document.getElementsByName("workout");
-        workoutTags = ""
-
-        for (var i = 0; i < workoutTag.length; i++) {
-            if (workoutTag[i].checked) {
-                workoutTags = workoutTags + workoutTag[i].value + ",";
-            }
-            $("#tags").val(workoutTags);
-        }
-    }
 </script>
 
+<!--js파일 경로-->
+<!--<script src="js/insta.js"></script>-->
 </body>
 </html>
