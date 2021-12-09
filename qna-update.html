@@ -65,8 +65,8 @@
 
     </style>
     <script>
-        // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
-        let apiUrl = "http://localhost:8080"
+        let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
+        // let apiUrl = "http://localhost:8080"
         $(document).ready(function () {
             login_check();
             // URL파라미터에서 데이터 추출
@@ -189,32 +189,15 @@
 
     <header id="header">
         <section class="h_inner">
-
-            <h1 class="logo">
-                <a href="index.html">
-                    <div class="sprite_insta_icon"></div>
-                    <div>
-                        <div class="sprite_write_logo"></div>
-                    </div>
-                </a>
-            </h1>
-
-            <div class="search_field">
-                <input type="text" placeholder="검색" tabindex="0">
-
-                <div class="fake_field">
-                    <span class=sprite_small_search_icon></span>
-                    <span>검색</span>
+            <a href="index.html">
+                <div>
+                    <img src="imgs/logo.png">
                 </div>
-            </div>
-
-
+            </a>
             <div class="right_icons">
-                <a href="new_post.html"><div class="sprite_camera_icon"></div></a>
+                <a href="feed-save.html"><div class="sprite_plus_icon"></div></a>
                 <a href="login.html"><div class="sprite_compass_icon"></div></a>
-                <a href="qna-list.html"><div class="sprite_bubble_icon"></div></a>
-                <a href="follow.html"><div class="sprite_heart_icon_outline"></div></a>
-                <a href="profile.html"><div class="sprite_user_icon_outline"></div></a>
+                <a onclick="mypage()"><div class="sprite_user_icon_outline"></div></a>
             </div>
         </section>
     </header>
