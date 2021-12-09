@@ -131,7 +131,7 @@
 
   function feedUpdate() {
     id = getParam('id');
-    window.location.href = 'feedUpdate.html?id=' + id
+    window.location.href = 'feed-update.html?id=' + id
   }
 
   function feedDelete() {
@@ -140,7 +140,7 @@
       url: apiUrl + `/feed/${id}`,
       success: function (response) {
         alert("피드가 삭제되었습니다!");
-        window.location.href = "/feedList.html"
+        window.location.href = "/index.html"
       }
     })
   }
@@ -174,7 +174,7 @@
       </div>
 
       <div class="right_icons">
-        <a href="feedSave.html"><div class="sprite_camera_icon"></div></a>
+        <a href="feed-save.html"><div class="sprite_camera_icon"></div></a>
         <a href="login.html"><div class="sprite_compass_icon"></div></a>
         <a href="follow.html"><div class="sprite_heart_icon_outline"></div></a>
         <a href="profile.html"><div class="sprite_user_icon_outline"></div></a>
