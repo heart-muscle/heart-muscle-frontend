@@ -30,8 +30,20 @@
   let apiUrl = "http://localhost:8080"
 
   $(document).ready(function () {
+    login_check();
     feed_list();
+
   });
+
+
+  function login_check(){
+    let check_token = localStorage.getItem('token')
+    if (check_token == null) {
+      alert("로그인부터!")
+      history.pushState(null, null, '/push')
+      window.location.href="login.html"
+    }
+  }
 
   function feed_list() {
 
@@ -70,7 +82,7 @@
                                                     <div class="nick_name m_text"><a href="profile.html?id=${username}">${username}</a></div>
                                                 </div>
                                                 <div class="comment-detail">
-                                                    <div class="nick_name m_text"><a href="feed-detail.html?id=${id}">${title}</a></div>
+                                                    <div class="nick_name m_text"><a href="feedDetail.html?id=${id}">${title}</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -147,8 +159,9 @@
       </div>
 
       <div class="right_icons">
-        <a href="feed-save.html"><div class="sprite_camera_icon"></div></a>
+        <a href="feedSave.html"><div class="sprite_camera_icon"></div></a>
         <a href="login.html"><div class="sprite_compass_icon"></div></a>
+        <a href="qna-list.html"><div class="sprite_bubble_icon"></div></a>
         <a href="follow.html"><div class="sprite_heart_icon_outline"></div></a>
         <a onclick="mypage()"><div class="sprite_user_icon_outline"></div></a>
       </div>
