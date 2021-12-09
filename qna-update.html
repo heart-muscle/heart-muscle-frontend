@@ -92,13 +92,13 @@
             console.log("search: ", search)
             let params = new URLSearchParams(search);
             console.log("params: ", params)
-            let getType = params.get('idx');
+            let getType = params.get('id');
             console.log("getType: ", getType)
 
             $.ajax({
                 type: "GET",
-                url: "/api/board-update",
-                data: {idx_give: getType},
+                url: apiUrl + `/qna/${id}`,
+                data: {id_give: getType},
                 success: function (response) {
                     console.log(response)
                     let username = response['username']
@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                             <div class="input-group mb-3">
-                                <input type="hidden" name="idx" value="${content}"/>
+                                <input type="hidden" name="id" value="${content}"/>
                                 <div class="input-group-prepend common">
                                     <span class="badge badge-primary" id="badge-primary">제목</span>
                                     <input class="form-control" type="text" id="title" name="update_title" value="${title}"/>
@@ -149,7 +149,7 @@
             $.ajax({
                 type: "POST",
                 url: "api/delete",
-                data: {idx_give: id},
+                data: {id_give: id},
                 success: function (response) {
                     alert(response['msg']);
                     window.location.href = "qna-list.html"
@@ -168,7 +168,7 @@
             $.ajax({
                 type: "POST",
                 url: "/api/board-update",
-                data: {title_give: update_title, update_content_give: update_content, idx_give: id},
+                data: {title_give: update_title, update_content_give: update_content, id_give: id},
                 success: function (response) {
                     alert(response['msg']);
                     window.location.href = '/board-list'

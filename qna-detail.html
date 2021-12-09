@@ -56,7 +56,7 @@
     <script>
         // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
         let apiUrl = "http://localhost:8080"
-
+        let currentUserName = localStorage.getItem('username')
         let id = '';
         $(document).ready(function () {
             id = getParam('id');
@@ -75,6 +75,8 @@
                 url: apiUrl + `/qna/${id}`,
                 success: function (response) {
                     console.log(response)
+                    let username = response['username']
+                    console.log(username)
                     $("#username").html(response['username']);
                     $("#title").html(response['title']);
                     $("#content").html(response['content']);
@@ -83,7 +85,18 @@
 
                         makeListComment(response['comment'][i])
                     }
-                }
+                    console.log(username)
+                    console.log(currentUserName)
+
+                    if (currentUserName === username) {
+                        let temp_html = `<div>
+                                    <button id="list-box" onclick="window.location.href='board-list.html'" type="button" class="btn btn-outline-danger"><i class="fas fa-list"></i></button>
+                                    <button class="btn btn-outline-danger" onclick="show_update(event, '${id}')"><i class="fas fa-edit"></i></button>
+                                    <button onclick="delete_board(('${id}'))" type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>`
+                        $('#icon-box').append(temp_html)
+                    } else {}
+                },
             })
         }
 
@@ -111,6 +124,67 @@
             let tempHtml = `<li class="list-group-item">${comment['comment']}</li>`;
             $("#comment-list").append(tempHtml);
         }
+
+        function show_update(event, id) {
+            id = getParam('id')
+            console.log(id)
+            $.ajax({
+                type: "GET",
+                url: apiUrl + `/qna/${id}`,
+                success: function (response) {
+                    console.log(response)
+                    let username = response['username']
+                    if (currentUserName === username) {
+                        $.ajax({
+                            type: "GET",
+                            url: apiUrl + `/qna/${id}`,
+                            success: function (response) {
+                                event.preventDefault()
+                                window.location.href = 'qna-update.html?id=' + id
+                            }
+                        })
+                    } else {
+                        alert("권한이 없습니다!")
+                             }
+                }
+            })
+        }
+
+
+        function delete_board(id) {
+            id = getParam('id')
+            console.log(id)
+                $.ajax({
+                    type: "GET",
+                    url: apiUrl + `/qna/${id}`,
+                    success: function (response) {
+                        console.log(response)
+                        let username = response['username']
+                        if (currentUserName === username) {
+                            $.ajax({
+                                type: "DELETE",
+                                url: apiUrl + `/qna/${id}`,
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                                },
+                                success: function (response) {
+                                    alert("피드 삭제 완료 !!");
+                                    window.location.href = "qna-list.html"
+
+                                }
+                            })
+                        } else {
+                            alert("권한이 없습니다!")
+                        }
+                    }
+                })
+
+        }
+
+
+
+
+
 
     </script>
 </head>
@@ -178,8 +252,11 @@
                     </div>
                     <hr/>
                     <textarea class="form-control" id="comment" rows="3"></textarea>
+                    <hr/>
                     <button type="button" class="btn btn-primary" onclick="setQnaComment()"><i class="fas fa-save"></i></button>
                     <button type="button" class="btn btn-primary" onclick="location.href='qna-list.html'"><i class="fas fa-list"></i></button>
+                    <button class="btn btn-outline-danger" onclick="show_update(event, id)"><i class="fas fa-edit"></i></button>
+                    <button onclick="delete_board(('${id}'))" type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
                     <hr/>
                     <ul class="list-group" id="comment-list"></ul>
 
