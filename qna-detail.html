@@ -220,7 +220,6 @@
                 <div class="container">
                     <div class="row">
                         <div class="wrap">
-                            <button id="list-box" onclick="window.location.href='qna-list.html'" type="button" class="btn btn-outline-danger"><i class="fas fa-list"></i></button>
                             <div id="update"></div>
                             <div id="read-box"></div>
                         </div>
@@ -240,10 +239,10 @@
                     <hr/>
                     <textarea class="form-control" id="comment" rows="3"></textarea>
                     <hr/>
-                    <button type="button" class="btn btn-primary" onclick="setQnaComment()"><i class="fas fa-save"></i></button>
-                    <button type="button" class="btn btn-primary" onclick="location.href='qna-list.html'"><i class="fas fa-list"></i></button>
-                    <button class="btn btn-outline-danger" onclick="show_update(event, id)"><i class="fas fa-edit"></i></button>
-                    <button onclick="delete_board(('${id}'))" type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                    <button type="button" class="btn btn-secondary" onclick="setQnaComment()"><i class="fas fa-save"></i></button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='qna-list.html'"><i class="fas fa-list"></i></button>
+                    <button class="btn btn-secondary" onclick="show_update(event, id)"><i class="fas fa-edit"></i></button>
+                    <button onclick="delete_board(('${id}'))" type="button" class="btn btn-secondary"><i class="fas fa-trash"></i></button>
                     <hr/>
                     <ul class="list-group" id="comment-list"></ul>
 
