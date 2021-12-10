@@ -5,12 +5,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register - Free Bulma template</title>
+    <title>두근득근 회원가입</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/15181efa86.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
     <link rel="stylesheet" type="text/css" href="../css/register.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
     <script>
 
         let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
@@ -155,28 +158,28 @@
                     <h1 class="title is-4">WELCOME</h1>
                     <p class="description">운동하고 싶은 당신을 환영해요! :)</p>
 
-                        <div class="field">
-                            <div class="control">
-                                <input class="input is-medium" type="text" placeholder="Username" id="username">
-                                <button class="button is-primary is-inverted" onclick="checkSignup()">ID 중복 확인</button>
-                                <p id="help-id-login" class="help is-danger"></p>
-                            </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-medium" type="text" placeholder="Username" id="username">
+                            <button class="button is-primary is-inverted" onclick="checkSignup()">ID 중복 확인</button>
+                            <p id="help-id-login" class="help is-danger"></p>
                         </div>
-                        <div class="field">
-                            <div class="control">
-                                <input class="input is-medium" type="email" placeholder="E-mail" id="email">
-                                <p id="help-email" class="help is-danger"></p>
-                            </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-medium" type="email" placeholder="E-mail" id="email">
+                            <p id="help-email" class="help is-danger"></p>
                         </div>
-                        <div class="field">
-                            <div class="control">
-                                <input class="input is-medium" type="password" placeholder="password" id="password" >
-                                <p id="help-password-login" class="help is-danger"></p>
-                            </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-medium" type="password" placeholder="password" id="password" >
+                            <p id="help-password-login" class="help is-danger"></p>
                         </div>
-                        <button class="button is-block is-primary is-fullwidth is-medium" onclick="signup()">Sign Up</button>
-                        <br />
-                        <small><em>같이 운동해볼까요?</em></small>
+                    </div>
+                    <button class="button is-block is-primary is-fullwidth is-medium" onclick="signup()">Sign Up</button>
+                    <br />
+                    <small><em>같이 운동해볼까요?</em></small>
 
                 </div>
             </div>
