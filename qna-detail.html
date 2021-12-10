@@ -116,8 +116,9 @@
                     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
                 },
                 success: function (response) {
+                    window.location.reload();
                     alert("댓글이 작성되었습니다!!");
-                    window.location.reload()
+
                     getQna();
 
                 }
