@@ -218,6 +218,11 @@
     })
   }
 
+  function mypage() {
+    username = localStorage.getItem('username')
+    console.log(username)
+    window.location.href = 'profile.html?id=' + username
+  }
 
 </script>
 

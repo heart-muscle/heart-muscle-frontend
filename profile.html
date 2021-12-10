@@ -111,6 +111,12 @@
         window.location.href = 'profile-edit.html?id=' + id
     }
 
+    function mypage() {
+        username = localStorage.getItem('username')
+        console.log(username)
+        window.location.href = 'profile.html?id=' + username
+    }
+
     function logout(){
         localStorage.clear()
         window.location.href="login.html"

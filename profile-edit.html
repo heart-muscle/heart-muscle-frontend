@@ -40,8 +40,8 @@
 
 <script>
 
-  // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com/"
-  let apiUrl = "http://localhost:8080"
+  let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
+  // let apiUrl = "http://localhost:8080"
 
   var search = location.search
   console.log("search: ", search)
@@ -105,9 +105,9 @@
       </a>
       <div class="right_icons">
         <a href="feed-save.html"><div class="sprite_plus_icon"></div></a>
+        <a href="qna-list.html"><div class="sprite_bubble_icon"></div></a>
         <a href="login.html"><div class="sprite_compass_icon"></div></a>
         <a onclick="mypage()"><div class="sprite_user_icon_outline"></div></a>
-        <a href="qna-list.html"><div class="sprite_more_icon"></div></a>
       </div>
     </section>
   </header>
@@ -123,7 +123,7 @@
           <div class="upload">
             <div class="post_btn">
               <canvas id="imageCanvas"></canvas>
-              <img id="userImage" class="image-view" alt="...">
+              <img id="userImage" class="profile-image-size" alt="...">
               <!--<p><img id="img_id" src="#" style="width: 300px; height: 300px; object-fit: cover" alt="thumbnail"></p>-->
             </div>
           </div>
