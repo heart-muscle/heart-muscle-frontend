@@ -73,6 +73,7 @@
 
     $(document).ready(function () {
         getUser(id);
+        profile_setting();
     })
 
     function getUser() {
@@ -123,6 +124,13 @@
         window.location.href="login.html"
     }
 
+    function profile_setting(){
+        if (id == window.localStorage.getItem("username")){
+            $("#profile_setting").show();
+        } else {
+            $("#profile-setting").hide();
+        }
+    }
 </script>
 
 <body>
@@ -163,7 +171,7 @@
                         <div class="user_name font" id="nickname"></div>
                         <!--                        <a onclick="edit()" class="profile_edit">프로필편집</a>-->
                         <!--                        <a class="logout" onclick="logout()">로그아웃</a>-->
-                        <i class="fas fa-cog fa-2x" data-toggle="modal" data-target="#exampleModal"></i>
+                        <i class="fas fa-cog fa-2x" id="profile-setting" data-toggle="modal" data-target="#exampleModal"></i>
                     </div>
 
                     <ul class="middle font">

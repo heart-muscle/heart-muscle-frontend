@@ -23,6 +23,9 @@
     <!--    <script type="application/javascript" src="../static/js/login.js"></script>-->
 
     <script>
+        $(document).ready(function () {
+           checklogin()
+        })
 
         // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
         // let apiUrl = "http://localhost:8080"
@@ -68,6 +71,9 @@
                 fail: function (err) {
                     alert(JSON.stringify(err))
                 },
+                error: function (err) {
+                    alert("아이디 혹은 비밀번호가 틀렸습니다")
+                }
             })
         }
 
@@ -89,6 +95,13 @@
                     })
                 }
             })
+        }
+
+        function checklogin(){
+            if (window.localStorage.getItem("token") != null) {
+                alert("이미 로그인 되어있습니다.")
+                window.location.href="index.html"
+            }
         }
     </script>
 
