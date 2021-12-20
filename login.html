@@ -19,17 +19,14 @@
     <!-- 외부 CSS 파일 불러오기 -->
     <link rel="stylesheet" type="text/css" href="/css/login.css">
 
-    <!-- JS 불러오기 -->
-    <!--    <script type="application/javascript" src="../static/js/login.js"></script>-->
+    <!--  apiURL-->
+    <script src="/js/apiUrl.js"></script>
 
     <script>
         $(document).ready(function () {
            checklogin()
         })
 
-        // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
-        // let apiUrl = "http://localhost:8080"
-        let apiUrl = "https://www.heartmusclebackend.shop"
 
         function login() {
             let userid = $("#username").val()

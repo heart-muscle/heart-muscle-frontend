@@ -32,6 +32,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+    <!--  apiURL-->
+    <script src="/js/apiUrl.js"></script>
 
     <style>
 
@@ -54,9 +56,6 @@
         }
     </style>
     <script>
-        // let apiUrl = "http://heartmuscle-env.eba-v2mbdfk2.ap-northeast-2.elasticbeanstalk.com"
-        // let apiUrl = "http://localhost:8080"
-        let apiUrl = "https://www.heartmusclebackend.shop"
 
         let currentUserName = localStorage.getItem('username')
         let id = '';
@@ -78,17 +77,16 @@
                 success: function (response) {
                     console.log(response)
                     let username = response['username']
-                    console.log(username)
                     $("#username").html(response['username']);
                     $("#title").html(response['title']);
                     $("#content").html(response['content']);
                     $("#comment-list").empty();
                     for (let i = 0; i < response['comment'].length; i++) {
-
+                        // console.log(response['comment'][i])
+                        // console.log(response['comment'][i]['user']['username'])
                         makeListComment(response['comment'][i])
                     }
-                    console.log(username)
-                    console.log(currentUserName)
+
 
                     if (currentUserName === username) {
                         let temp_html = `<div>
@@ -102,14 +100,16 @@
             })
         }
 
-        function setQnaComment() {
+        function postQnaComment() {
+            qnaId = id
             let comment = {
-                "id":id,
+                // "qnaId":id,
                 "comment":$("#comment").val()
             }
+
             $.ajax({
                 type: "POST",
-                url: apiUrl + `/qna/comment`,
+                url: apiUrl + `/qna/${qnaId}/comment`,
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(comment),
                 beforeSend: function (xhr) {
@@ -125,11 +125,30 @@
         }
 
         function makeListComment(comment) {
-            let tempHtml = `<li class="list-group-item">${comment['comment']}</li>`;
+console.log(comment)
+console.log(comment['comment'])
+console.log(comment['user']['username'])
+            // let tempHtml = `<li class="list-group-item">${comment['comment']}</li>`;
+            // $("#comment-list").append(tempHtml);
+
+            let tempHtml = `<div className="comment_container">
+                <div className="comment" id="comment-list-ajax-post37">
+                    <div className="comment-detail">
+                        <div className="nick_name m_text">${comment['user']['username']}</div>
+                        <div>${comment['comment']}</div>
+                    </div>
+                </div>
+                <div className="small_heart">
+                    <div className="sprite_small_heart_icon_outline"></div>
+                </div>
+            </div>
+                                <hr/>
+
+`
             $("#comment-list").append(tempHtml);
         }
 
-        function show_update(event, id) {
+        function showUpdate(event, id) {
             id = getParam('id')
             console.log(id)
             $.ajax({
@@ -155,7 +174,7 @@
         }
 
 
-        function delete_board(id) {
+        function deleteBoard(id) {
             id = getParam('id')
             console.log(id)
                 $.ajax({
@@ -185,7 +204,7 @@
 
         }
 
-        function mypage() {
+        function myPage() {
             username = localStorage.getItem('username')
             console.log(username)
             window.location.href = 'profile.html?id=' + username
@@ -209,7 +228,7 @@
                 <a href="feed-save.html"><div class="sprite_plus_icon"></div></a>
                 <a href="qna-list.html"><div class="sprite_bubble_icon"></div></a>
                 <a href="login.html"><div class="sprite_compass_icon"></div></a>
-                <a onclick="mypage()"><div class="sprite_user_icon_outline"></div></a>
+                <a onclick="myPage()"><div class="sprite_user_icon_outline"></div></a>
             </div>
         </section>
     </header>
@@ -241,10 +260,10 @@
                     <hr/>
                     <textarea class="form-control" id="comment" rows="3"></textarea>
                     <hr/>
-                    <button type="button" class="btn btn-secondary" onclick="setQnaComment()"><i class="fas fa-save"></i></button>
+                    <button type="button" class="btn btn-secondary" onclick="postQnaComment()"><i class="fas fa-save"></i></button>
                     <button type="button" class="btn btn-secondary" onclick="location.href='qna-list.html'"><i class="fas fa-list"></i></button>
-                    <button class="btn btn-secondary" onclick="show_update(event, id)"><i class="fas fa-edit"></i></button>
-                    <button onclick="delete_board(('${id}'))" type="button" class="btn btn-secondary"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-secondary" onclick="showUpdate(event, id)"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteBoard(('${id}'))" type="button" class="btn btn-secondary"><i class="fas fa-trash"></i></button>
                     <hr/>
                     <ul class="list-group" id="comment-list"></ul>
 
