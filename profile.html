@@ -68,45 +68,89 @@
     console.log("search: ", search)
     var params = new URLSearchParams(search);
     console.log("params: ", params)
-    var id = params.get('id');
+    var getid = params.get('id');
     console.log("getType: ", id)
+    var id = getid.replace(/ /gi, "");
+    console.log(id)
 
     $(document).ready(function () {
-        getUser(id);
+        getUserInfo();
         profile_setting();
     })
 
-    function getUser() {
+    // function getUser() {
+    //     $.ajax({
+    //         type: "GET",
+    //         url: apiUrl + `/user/${id}`,
+    //         success: function (response) {
+    //             console.log("유저테이블가져오기", response)
+    //             feed = response['feeds']
+    //             feedCount = response['feeds'].length;
+    //             username = response['username']
+    //
+    //             console.log("feedLength", feedCount)
+    //
+    //             $("#nickname").html(response['nickname']);
+    //             $("#image").attr("src", response['imgUrl']);
+    //             $("#feedCount").html(response['feeds'].length);
+    //
+    //             for (let i = 0; i < feed.length; i++) {
+    //                 let url = feed[i]['imageUrl']
+    //                 console.log("url", url)
+    //
+    //                 let tempHtml = `
+    //                                 <div class="pic">
+    //                                     <a href="#"><img src="${url}" alt=""></a>
+    //                                 </div>
+    //                                 `
+    //
+    //                 $('#userFeed').append(tempHtml)
+    //             }
+    //         }
+    //     })
+    //
+    // }
+
+    function getUserInfo() {
         $.ajax({
             type: "GET",
-            url: apiUrl + `/user/${id}`,
+            url: apiUrl + `/user/profile`,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+            },
             success: function (response) {
-                console.log("유저테이블가져오기", response)
+                username = response['username'];
+                imgLink = response['imgUrl'];
+                kinkname = response['kinkname']
                 feed = response['feeds']
-                feedCount = response['feeds'].length;
-                username = response['username']
-
-                console.log("feedLength", feedCount)
+                console.log(response)
 
                 $("#nickname").html(response['nickname']);
                 $("#image").attr("src", response['imgUrl']);
                 $("#feedCount").html(response['feeds'].length);
 
+                if (username == window.localStorage.getItem("username")){
+                    $("#profile_setting").show();
+                } else {
+                    $("#profile-setting").hide();
+                }
+
                 for (let i = 0; i < feed.length; i++) {
                     let url = feed[i]['imageUrl']
+                    let id = feed[i]['id']
                     console.log("url", url)
 
+
                     let tempHtml = `
-                                    <div class="pic">
-                                        <a href="#"><img src="${url}" alt=""></a>
-                                    </div>
-                                    `
+                                                <div class="pic">
+                                                    <a onclick="getDetail('${id}')"><img src="${url}" alt=""></a>
+                                                </div>
+                                                `
 
                     $('#userFeed').append(tempHtml)
                 }
             }
         })
-
     }
 
     function edit() {
@@ -124,12 +168,16 @@
         window.location.href="login.html"
     }
 
-    function profile_setting(){
-        if (id == window.localStorage.getItem("username")){
-            $("#profile_setting").show();
-        } else {
-            $("#profile-setting").hide();
-        }
+    // function profile_setting(){
+    //     if (Response['username'] == window.localStorage.getItem("username")){
+    //         $("#profile_setting").show();
+    //     } else {
+    //         $("#profile-setting").hide();
+    //     }
+    // }
+    function getDetail(id) {
+        console.log('id', id)
+        window.location.href = 'feed-detail.html?id=' + id
     }
 </script>
 
