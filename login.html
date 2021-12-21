@@ -82,9 +82,9 @@
                     $.ajax({
                         type: 'POST',
                         url: apiUrl + `/login/kakao`,
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-                        },
+                        // beforeSend: function (xhr) {
+                        //     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                        // },
                         contentType: "application/json",
                         data: JSON.stringify({'token': authObj['access_token']}),
                         success: function (response) {
