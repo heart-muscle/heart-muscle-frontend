@@ -67,19 +67,19 @@
             <form action="#" class="post_form">
                 <div class="preview">
                     <div class="upload">
-                        <div class="post_btn">
-                            <div class="plus_icon">
-                                <span></span>
-                                <span></span>
-                            </div>
-                            <p>피드 이미지 추가</p>
+                        <div class="post_btn" align="center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+<!--                                <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path>-->
+                                <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z"></path>
+                            </svg>
+                            <p>피드 이미지 미리보기</p>
                             <canvas id="imageCanvas"></canvas>
                             <!--<p><img id="img_id" src="#" style="width: 300px; height: 300px; object-fit: cover" alt="thumbnail"></p>-->
                         </div>
                     </div>
                 </div>
                 <p>
-                    <input type="file" name="file" id="image" required="required">
+                    <input type="file" name="file" id="image" required="required" accept="image/*, video/*">
                 </p>
                 <p>
                     <textarea type="text" value="" id="title" class="form-control" placeholder="제목을 입력해주세요"></textarea>
@@ -106,24 +106,15 @@
 
 </section>
 
-<!--js파일 경로-->
-<!--<script src="js/insta.js"></script>-->
 <script>
-
-
 
     $(document).ready(function () {
         test = localStorage.getItem('token')
         nowUsername = localStorage.getItem('username')
         if (test == null) {
-            alert("테스트지롱")
             window.location.href="/user/login"
         }
-        // else {
-        //     alert(localStorage.getItem('username'))
-        // }
     });
-
 
     var fileInput  = document.querySelector( "#image" ),
         button     = document.querySelector( ".input-file-trigger" ),
@@ -160,7 +151,6 @@
         data.append("username", localStorage.getItem('username'));
         if (typeof $("#image")[0].files[0] != 'undefined') data.append("image", $("#image")[0].files[0]);
 
-
         $.ajax({
             type: "POST",
             url: apiUrl + "/feed",
@@ -178,7 +168,6 @@
         })
     }
 
-
     function addTag() {
         var workoutTag = document.getElementsByName("workout");
         workoutTags = ""
@@ -193,7 +182,6 @@
 
     function mypage() {
         username = localStorage.getItem('username')
-        console.log(username)
         window.location.href = 'profile.html?id=' + username
     }
 </script>

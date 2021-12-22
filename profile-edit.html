@@ -58,7 +58,10 @@
   function getUser() {
     $.ajax({
       type: "GET",
-      url: apiUrl + `/user/detail/${id}`,
+      url: apiUrl + `/mypage/${id}`,
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+      },
       success: function (response) {
         console.log("유저테이블가져오기", response)
 
@@ -84,7 +87,7 @@
       data: data,
       success: function (response) {
         alert("포스팅 업데이트 성공!");
-        window.location.href="profile.html"
+        window.location.href="profile.html?id=" + id
       }
     })
   }

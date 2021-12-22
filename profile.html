@@ -33,7 +33,8 @@
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
+          integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
     <!-- 합쳐지고 최소화된 최신 CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
@@ -55,7 +56,8 @@
         }
 
         .font {
-            font-family: 'IM_Hyemin-Bold'; !important;
+            font-family: 'IM_Hyemin-Bold';
+        !important;
         }
     </style>
 
@@ -65,88 +67,42 @@
 
 
     var search = location.search
-    console.log("search: ", search)
     var params = new URLSearchParams(search);
-    console.log("params: ", params)
     var getid = params.get('id');
-    console.log("getType: ", id)
     var id = getid.replace(/ /gi, "");
-    console.log(id)
 
     $(document).ready(function () {
-        getUserInfo();
-        profile_setting();
+        getUser(id);
     })
 
-    // function getUser() {
-    //     $.ajax({
-    //         type: "GET",
-    //         url: apiUrl + `/user/${id}`,
-    //         success: function (response) {
-    //             console.log("유저테이블가져오기", response)
-    //             feed = response['feeds']
-    //             feedCount = response['feeds'].length;
-    //             username = response['username']
-    //
-    //             console.log("feedLength", feedCount)
-    //
-    //             $("#nickname").html(response['nickname']);
-    //             $("#image").attr("src", response['imgUrl']);
-    //             $("#feedCount").html(response['feeds'].length);
-    //
-    //             for (let i = 0; i < feed.length; i++) {
-    //                 let url = feed[i]['imageUrl']
-    //                 console.log("url", url)
-    //
-    //                 let tempHtml = `
-    //                                 <div class="pic">
-    //                                     <a href="#"><img src="${url}" alt=""></a>
-    //                                 </div>
-    //                                 `
-    //
-    //                 $('#userFeed').append(tempHtml)
-    //             }
-    //         }
-    //     })
-    //
-    // }
-
-    function getUserInfo() {
+    function getUser() {
         $.ajax({
             type: "GET",
-            url: apiUrl + `/user/profile`,
+            url: apiUrl + `/user/${id}`,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
             },
             success: function (response) {
-                username = response['username'];
-                imgLink = response['imgUrl'];
-                kinkname = response['kinkname']
+                username = response['username']
                 feed = response['feeds']
-                console.log(response)
 
                 $("#nickname").html(response['nickname']);
                 $("#image").attr("src", response['imgUrl']);
                 $("#feedCount").html(response['feeds'].length);
 
-                if (username == window.localStorage.getItem("username")){
+                if (username == window.localStorage.getItem("username")) {
                     $("#profile_setting").show();
                 } else {
                     $("#profile-setting").hide();
                 }
-
                 for (let i = 0; i < feed.length; i++) {
                     let url = feed[i]['imageUrl']
                     let id = feed[i]['id']
-                    console.log("url", url)
-
-
                     let tempHtml = `
-                                                <div class="pic">
-                                                    <a onclick="getDetail('${id}')"><img src="${url}" alt=""></a>
+                                                <div>
+                                                    <a onclick="getDetail('${id}')"><img src="${url}" class="profile-image-size"></a>
                                                 </div>
                                                 `
-
                     $('#userFeed').append(tempHtml)
                 }
             }
@@ -159,24 +115,15 @@
 
     function mypage() {
         username = localStorage.getItem('username')
-        console.log(username)
         window.location.href = 'profile.html?id=' + username
     }
 
-    function logout(){
+    function logout() {
         localStorage.clear()
-        window.location.href="login.html"
+        window.location.href = "login.html"
     }
 
-    // function profile_setting(){
-    //     if (Response['username'] == window.localStorage.getItem("username")){
-    //         $("#profile_setting").show();
-    //     } else {
-    //         $("#profile-setting").hide();
-    //     }
-    // }
     function getDetail(id) {
-        console.log('id', id)
         window.location.href = 'feed-detail.html?id=' + id
     }
 </script>
@@ -194,10 +141,18 @@
                 </div>
             </a>
             <div class="right_icons">
-                <a href="feed-save.html"><div class="sprite_plus_icon"></div></a>
-                <a href="qna-list.html"><div class="sprite_bubble_icon"></div></a>
-                <a href="login.html"><div class="sprite_compass_icon"></div></a>
-                <a onclick="mypage()"><div class="sprite_user_icon_outline"></div></a>
+                <a href="feed-save.html">
+                    <div class="sprite_plus_icon"></div>
+                </a>
+                <a href="qna-list.html">
+                    <div class="sprite_bubble_icon"></div>
+                </a>
+                <a href="login.html">
+                    <div class="sprite_compass_icon"></div>
+                </a>
+                <a onclick="mypage()">
+                    <div class="sprite_user_icon_outline"></div>
+                </a>
             </div>
         </section>
     </header>
@@ -217,9 +172,8 @@
                 <div class="detail">
                     <div class="top">
                         <div class="user_name font" id="nickname"></div>
-                        <!--                        <a onclick="edit()" class="profile_edit">프로필편집</a>-->
-                        <!--                        <a class="logout" onclick="logout()">로그아웃</a>-->
-                        <i class="fas fa-cog fa-2x" id="profile-setting" data-toggle="modal" data-target="#exampleModal"></i>
+                        <i class="fas fa-cog fa-2x" id="profile-setting" data-toggle="modal"
+                           data-target="#exampleModal"></i>
                     </div>
 
                     <ul class="middle font">
@@ -248,7 +202,8 @@
                     <h3 class="modal-title" id="exampleModalLabel">User Setting</h3>
                 </div>
                 <div class="modal-body">
-                    <a onclick="edit()" class="profile_edit">프로필편집</a><hr>
+                    <a onclick="edit()" class="profile_edit">프로필편집</a>
+                    <hr>
                     <a class="logout" onclick="logout()">로그아웃</a>
                 </div>
 
@@ -258,14 +213,6 @@
     </div>
 
 </section>
-
-
-<!--<script src="js/insta.js"></script>-->
 <script src="js/profile.js"></script>
-<script>
-
-
-
-</script>
 </body>
 </html>

@@ -97,9 +97,7 @@
 
   $(document).ready(function () {
     id = getParam('id');
-    console.log(id)
     nowUsername = localStorage.getItem('username')
-    console.log("nowUsername",nowUsername)
     getFeed(id);
     checkUser(id);
   })
@@ -139,37 +137,30 @@
 
   function getParam(name) {
     var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
-    console.log(results)
     return results[1] || 0;
   }
 
   var search = location.search
-  console.log("search: ", search)
   var params = new URLSearchParams(search);
-  console.log("params: ", params)
   var getType = params.get('id');
-  console.log("getType: ", getType)
-
 
   function getFeed() {
     $.ajax({
       type: "GET",
       url: apiUrl + `/feed/${id}`,
       success: function (response) {
-        // console.log("nowID:", response[user_id]);
-
+        console.log(response)
         $("#title").html(response['title']);
         $("#content").html(response['content']);
-        $("#username").html(response['username']);
+        $("#username").html(response['user']['username']);
+        $("#profileImage").attr("src", response['user']['imgUrl']);
         $("#image").attr("src", response['imageUrl']);
         $("#comment-list").empty();
         for (let i = 0; i < response['comments'].length; i++) {
           makeListComment(response['comments'][i])
-
         }
       }
     })
-
   }
 
   function writeComment() {
@@ -177,12 +168,14 @@
       "id":id,
       "comment":$("#comment").val()
     }
-    console.log(comment)
     $.ajax({
       type: "POST",
       url: apiUrl + `/feed/comment`,
       contentType: 'application/json; charset=utf-8',
       data: JSON.stringify(comment),
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+      },
       success: function (response) {
         alert("댓글이 작성되었습니다!!");
         getFeed();
@@ -197,6 +190,8 @@
                         <div class="comment_container">
                             <div class="comment" id="comment-list-ajax-post37">
                                 <div class="comment-detail">
+                                    <div>${comment['commentUser']}</div>
+                                    &nbsp&nbsp&nbsp&nbsp&nbsp
                                     <div>${comment['comment']}</div>
                                 </div>
                             </div>
@@ -222,7 +217,6 @@
 
   function mypage() {
     username = localStorage.getItem('username')
-    console.log(username)
     window.location.href = 'profile.html?id=' + username
   }
 
@@ -230,10 +224,7 @@
 
 <body>
 
-
 <section id="container">
-
-
   <header id="header">
     <section class="h_inner">
       <a href="index.html">
@@ -258,7 +249,7 @@
         <article class="contents">
           <header class="top">
             <div class="user_container" style="padding: 15px">
-              <div class="sprite_user_icon_outline"></div>
+              <div><img id="profileImage" class="profile-image-size-min"></div>
               <div class="comment_container">
                 <div class="comment" id="username"></div>
               </div>
@@ -317,13 +308,6 @@
   </section>
 
 </section>
-
-
-
-
-
-
-
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="js/main.js"></script>

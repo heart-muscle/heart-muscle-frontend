@@ -1,81 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Title</title>
 
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/common.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/image.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/image.css">
 
 
-  <!-- JQuery-->
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- JQuery-->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-  <script src="/js/jquery.twbsPagination.js"></script> <!-- jQuery -->
-  <script src="/js/jquery-3.6.0.min.js"></script> <!-- Bootstrap -->
-  <script src="/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+    <!--  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>-->
 
-  <!--  apiURL-->
-  <script src="/js/apiUrl.js"></script>
+    <!-- pagination -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
 
-<!--  <style>-->
-<!--    @font-face {-->
-<!--      font-family: 'IM_Hyemin-Bold';-->
-<!--      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');-->
-<!--      font-weight: normal;-->
-<!--      font-style: normal;-->
-<!--    }-->
+    <script src="/js/jquery-3.6.0.min.js"></script> <!-- Bootstrap -->
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
 
-<!--    *{-->
-<!--      font-family: 'IM_Hyemin-Bold'; !important;-->
-<!--    }-->
-<!--  </style>-->
-
+    <!--  apiURL-->
+    <script src="/js/apiUrl.js"></script>
 
 </head>
 
 <script>
 
 
-  $(document).ready(function () {
-      login_check();
-      feed_list();
-  });
+    $(document).ready(function () {
+        login_check();
+        feedList();
+    });
 
-  function login_check(){
-      let check_token = localStorage.getItem('token')
-      if (check_token == null) {
-          alert("로그인부터!")
-          history.pushState(null, null, '/push')
-          window.location.href="login.html"
-      }
-  }
+    function login_check() {
+        let check_token = localStorage.getItem('token')
+        if (check_token == null) {
+            alert("로그인이 필요합니다!")
+            history.pushState(null, null, '/push')
+            window.location.href = "login.html"
+        }
+    }
 
-  function feed_list() {
+    function feedList() {
 
-    $('#post').empty();
+        var sorting = $("#sorting option:selected").val();
+        var isAsc = $(':radio[name="isAsc"]:checked').val();
 
-    $.ajax({
-      type: "GET",
-      url: apiUrl + `/feed`,
-      success: function (response) {
-        console.log(response)
+        // $('#post_table').empty();
+        $('#feed').empty();
+        $('#search-result-box').empty();
+        $('#pagination').pagination({
+            dataSource: apiUrl + `/feed?sortBy=${sorting}&isAsc=${isAsc}`,
+            locator: 'content',
+            alias: {
+                pageNumber: 'page',
+                pageSize: 'size'
+            },
+            totalNumberLocator: (response) => {
+                return response.totalElements;
+            },
+            pageSize: 3,
+            showPrevious: true,
+            showNext: true,
+            ajax: {
+                beforeSend: function () {
+                    $('#feed').html('피드 불러오는 중...');
+                }
+            },
+            callback: function (data, pagination) {
+                $('#feed').empty();
+                for (let i = 0; i < data.length; i++) {
+                    let feed = data[i];
+                    let tempHtml = addFeed(feed);
+                    $('#feed').append(tempHtml);
+                }
+            }
+        });
+    }
 
-        for (let i = 0; i < response.length; i++) {
-          let title = response[i]['title']
-          let id = response[i]['id']
-          let url = response[i]['imageUrl']
-          let createdAt = response[i]['createdAt']
-          let username = response[i]['username']
-          console.log(id)
-
-          let tempHtml = `
+    function addFeed(feed) {
+        let title = feed['title']
+        let id = feed['id']
+        let url = feed['imageUrl']
+        let checkImage = url.split('.').reverse()[0]
+        let createdAt = feed['createdAt']
+        let username = feed['username']
+        let profileImage = feed['user']['imgUrl']
+        let tempHtml = `
                                     <article class="contents">
                                         <div class="img_section">
                                             <div class="trans_inner">
@@ -86,6 +105,7 @@
                                         <div class="comment_container">
                                             <div class="comment" id="comment-list-ajax-post37">
                                                 <div class="comment-detail">
+                                                    <div><img src="${profileImage}" class="profile-image-size-min"></div>
                                                     <div class="title"><a href="profile.html?id=${username}">${username}</a></div>
                                                     <div class="title">${title}</div>
                                                 </div>
@@ -94,53 +114,17 @@
                                     </article>
                                     `
 
-          $('#feed').append(tempHtml)
-        }
-      }
-    })
-  }
+        return tempHtml;
+    }
 
-  // function getTime(createAt) {
-  //   let today = new Date()
-  //   var hours = ('0' + today.getHours()).slice(-2);
-  //   var minutes = ('0' + today.getMinutes()).slice(-2);
-  //   var seconds = ('0' + today.getSeconds()).slice(-2);
-  //
-  //   var timeString = hours + ':' + minutes  + ':' + seconds;
-  //
-  //   console.log(timeString)
-  //   console.log(createAt)
-  //   // console.log(today.toLocaleTimeString())
-  //   // let time = today - createAt;
-  //   console.log(today)
-  // }
+    function mypage() {
+        username = localStorage.getItem('username')
+        window.location.href = 'profile.html?id=' + username
+    }
 
-  // window.pagObj = $('#pagination').twbsPagination({
-  //   totalPages: [[${dataListPage.totalPages}]],
-  //   startPage: parseInt([[${dataListPage.number}]] + 1),
-  //   visiblePages: 2,
-  //   prev: "‹",
-  //   next: "›",
-  //   first: '«',
-  //   last: '»',
-  //   onPageClick: function (event, page) {
-  //     console.info("current page : " + page);
-  //   }
-  // }).on('page', function (event, page) {
-  //   searchDataList(page);
-  // });
-
-
-  function mypage() {
-    username = localStorage.getItem('username')
-    console.log(username)
-    window.location.href = 'profile.html?id=' + username
-  }
-
-  function getDetail(id) {
-    console.log('id', id)
-    window.location.href = 'feed-detail.html?id=' + id
-  }
+    function getDetail(id) {
+        window.location.href = 'feed-detail.html?id=' + id
+    }
 
 </script>
 <body>
@@ -149,45 +133,53 @@
 <section id="container">
 
 
-  <header id="header">
-    <section class="h_inner">
-      <a href="index.html">
+    <header id="header">
+        <section class="h_inner">
+            <a href="index.html">
+                <div>
+                    <img src="imgs/logo.png">
+                </div>
+            </a>
+            <div class="right_icons">
+                <a href="feed-save.html">
+                    <div class="sprite_plus_icon"></div>
+                </a>
+                <a href="qna-list.html">
+                    <div class="sprite_bubble_icon"></div>
+                </a>
+                <a href="login.html">
+                    <div class="sprite_compass_icon"></div>
+                </a>
+                <a onclick="mypage()">
+                    <div class="sprite_user_icon_outline"></div>
+                </a>
+            </div>
+        </section>
+    </header>
+
+    <section id="main_container">
         <div>
-          <img src="imgs/logo.png">
+            <!-- 페이징 -->
+            <div>
+                <div class="pagination">
+                    정렬
+                    <select id="sorting" onchange="feedList()">
+                        <option value="id">ID</option>
+                        <option value="title">제목</option>
+                        <option value="createdAt">생성일</option>
+                    </select>
+                    <input type="radio" name="isAsc" value="true" onchange="feedList()" checked/> 오름차순
+                    <input type="radio" name="isAsc" value="false" onchange="feedList()"/> 내림차순
+                </div>
+                <div id="pagination" class="pagination"></div>
+            </div>
+            <div class="contents_box" id="feed">
+            </div>
         </div>
-      </a>
-      <div class="right_icons">
-        <a href="feed-save.html"><div class="sprite_plus_icon"></div></a>
-        <a href="qna-list.html"><div class="sprite_bubble_icon"></div></a>
-        <a href="login.html"><div class="sprite_compass_icon"></div></a>
-        <a onclick="mypage()"><div class="sprite_user_icon_outline"></div></a>
-      </div>
     </section>
-  </header>
-
-  <section id="main_container">
-    <div>
-
-      <div class="contents_box" id="feed">
-      </div>
-
-      <input type="hidden" id="page" value="1">
-
-    </div>
-  </section>
-
 
 
 </section>
-
-
-
-
-
-
-
-
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

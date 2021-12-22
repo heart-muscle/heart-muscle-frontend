@@ -100,26 +100,13 @@
 
 <script>
 
-
-  // $(document).ready(function () {
-  //     test = localStorage.getItem('token')
-  //     username = localStorage.getItem('username')
-  //     if (test == null) {
-  //         alert("테스트지롱")
-  //     } else {
-  //         alert(localStorage.getItem('username'))
-  //     }
-  // });
-
   $(document).ready(function () {
     id = getParam('id');
-    console.log(id)
     getFeed(id);
   })
 
   function getParam(name) {
     var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
-    console.log(results)
     return results[1] || 0;
   }
 
@@ -128,8 +115,6 @@
       type: "GET",
       url: apiUrl + `/feed/${id}`,
       success: function (response) {
-        console.log(response);
-
         $("#title").html(response['title']);
         $("#content").html(response['content']);
         $("#tags").html(response['tags']);
@@ -164,14 +149,10 @@
 
   function mypage() {
     username = localStorage.getItem('username')
-    console.log(username)
     window.location.href = 'profile.html?id=' + username
   }
 
 
 </script>
-
-<!--js파일 경로-->
-<!--<script src="js/insta.js"></script>-->
 </body>
 </html>
