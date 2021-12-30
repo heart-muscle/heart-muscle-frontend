@@ -66,12 +66,9 @@
     <script>
 
         let currentUserName = localStorage.getItem('username')
-        console.log(currentUserName)
-        console.log(typeof(currentUserName))
         let id = '';
         $(document).ready(function () {
             id = getParam('id');
-            console.log(id)
             getQna(id);
         });
 
@@ -81,41 +78,37 @@
         }
 
         function getQna() {
+            $('#function-buttons').empty();
             $.ajax({
                 type: "GET",
                 url: apiUrl + `/qna/${id}`,
                 success: function (response) {
                     var username = response['user']['username']
-                    console.log(username)
-                    console.log(currentUserName)
                     $("#username").html(response['user']['username']);
                     $("#title").html(response['title']);
                     $("#content").html(response['content']);
                     $("#comment-list").empty();
                     for (let i = 0; i < response['comment'].length; i++) {
                         makeListComment(response['id'], response['comment'][i])
-                        console.log(response['comment'][i]['id'])
                     }
 
                     if (currentUserName === username) {
-                        let temp_html = `<div>
-                                    <button id="list-box" onclick="window.location.href='board-list.html'" type="button" class="btn btn-outline-danger"><i class="fas fa-list"></i></button>
-                                    <button class="btn btn-outline-danger" onclick="showUpdate(event, '${id}')"><i class="fas fa-edit"></i></button>
-                                    <button onclick="deleteQnaBoard(('${id}'))" type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </div>`
-                        $('#icon-box').append(temp_html)
-                    } else {}
+                        let temp_html = `<button type="button" class="btn btn-secondary" onclick="postQnaComment()">댓글 작성</button>
+                                        <button type="button" class="btn btn-secondary" onclick="location.href='qna-list.html'">목록</button>
+                                        <button class="btn btn-secondary" onclick="showUpdate(event, id)">수정</i></button>
+                                        <button onclick="deleteQnaBoard(('${id}'))" type="button" class="btn btn-secondary">삭제</i></button>`
+                        $('#function-buttons').append(temp_html)
+                    } else {
+                        let temp_html = `<button type="button" class="btn btn-secondary" onclick="postQnaComment()">댓글 작성</button>
+                                        <button type="button" class="btn btn-secondary" onclick="location.href='qna-list.html'">목록</button>`
+                        $('#function-buttons').append(temp_html)
+                    }
                 },
             })
         }
 
         function makeListComment(qnaId, comment) {
-            console.log(comment)
-            console.log(comment['id'])
-            console.log(qnaId)
             if (comment['user']['username'] === currentUserName) {
-                console.log(qnaId)
-                console.log(comment['id'])
                 let tempHtml1 = `<div className="comment_container">
                 <div className="comment" id="comment-list-ajax-post37">
                     <div class="comment-detail">
@@ -123,30 +116,12 @@
                         <div>${comment['comment']}</div>
                         <i class="far fa-heart"></i>
                         <div>
-                            <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">수정</button>
+                            <button onclick="modal(${qnaId}, ${comment['id']})" type="button" class="btn btn-light btn-sm">수정</button>
                             <button id="button-delete" onclick="deleteQnaComment(${qnaId}, ${comment['id']})" type="button" class="btn btn-light btn-sm">삭제</button>
                         </div>
                     </div>
                     <hr/>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="comment-text" class="col-form-label">댓글</label>
-                                            <textarea class="form-control" id="comment-text"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">닫기</button>
-                                    <button type="button" class="btn btn-light btn-sm" onclick="saveUpdateQnaComment('${qnaId}', '${comment['id']}')" >수정</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`
+                    `
                 $("#comment-list").append(tempHtml1);
             } else {
                 let tempHtml1 = `<div className="comment_container">
@@ -162,7 +137,11 @@
 
         }
 
-
+        function modal(qnaId, commendId) {
+            $('#updateCommentModal').modal('show');
+            $('#modalComment-id').val(commendId);
+            $('#modalQna-id').val(qnaId);
+        }
 
         function postQnaComment() {
             qnaId = id
@@ -191,12 +170,10 @@
 
         function showUpdate(event, id) {
             id = getParam('id')
-            console.log(id)
             $.ajax({
                 type: "GET",
                 url: apiUrl + `/qna/${id}`,
                 success: function (response) {
-                    console.log(response)
                     let username = response['user']['username']
                     if (currentUserName === username) {
                         $.ajax({
@@ -217,41 +194,22 @@
 
         function deleteQnaBoard(id) {
             id = getParam('id')
-            console.log(id)
                 $.ajax({
-                    type: "GET",
+                    type: "DELETE",
                     url: apiUrl + `/qna/${id}`,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                    },
                     success: function (response) {
-                        console.log(response)
-                        let username = response['username']
-                        if (currentUserName === username) {
-                            $.ajax({
-                                type: "DELETE",
-                                url: apiUrl + `/qna/${id}`,
-                                beforeSend: function (xhr) {
-                                    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-                                },
-                                success: function (response) {
-                                    alert("피드 삭제 완료 !!");
-                                    window.location.href = "qna-list.html"
+                        alert("게시글 삭제 완료 !!");
+                        window.location.href = "qna-list.html"
 
-                                }
-                            })
-                        } else {
-                            alert("권한이 없습니다!")
-                        }
                     }
                 })
 
         }
 
         function deleteQnaComment(qnaId, commentId) {
-            console.log(qnaId)
-            console.log(commentId)
-            id = getParam('id')
-            qnaId = id
-            console.log(id)
-
             $.ajax({
                 type: "DELETE",
                 url: apiUrl + `/qna/${qnaId}/comments/${commentId}`,
@@ -261,7 +219,7 @@
                 success: function (response) {
 
                     alert("댓글 삭제 완료 !!");
-                    $('#exampleModal').modal("hide"); //닫기
+                    $('#updateCommentModal').modal("hide"); //닫기
                     getQna(qnaId);
 
 
@@ -270,14 +228,12 @@
         }
 
 
-        function saveUpdateQnaComment(qnaId, commentId) {
-            console.log(qnaId)
-            console.log(commentId)
-
+        function saveUpdateQnaComment() {
+            let commentId = $('#modalComment-id').val();
+            let qnaId = $('#modalQna-id').val();
             let data = {
                 "comment": $("#comment-text").val(),
             }
-
             $.ajax({
                 type: "PUT",
                 url: apiUrl + `/qna/${qnaId}/comments/${commentId}`,
@@ -288,7 +244,7 @@
                 },
                 success: function (response) {
                     alert("댓글 수정 완료!");
-                    $('#exampleModal').modal("hide"); //닫기
+                    $('#updateCommentModal').modal("hide");
                     getQna(qnaId);
 
 
@@ -299,7 +255,6 @@
 
         function myPage() {
             username = localStorage.getItem('username')
-            console.log(username)
             window.location.href = 'profile.html?id=' + username
         }
 
@@ -355,10 +310,8 @@
                     <hr/>
                     <textarea class="form-control" id="comment" rows="3"></textarea>
                     <hr/>
-                    <button type="button" class="btn btn-secondary" onclick="postQnaComment()">댓글 작성</button>
-                    <button type="button" class="btn btn-secondary" onclick="location.href='qna-list.html'">목록</button>
-                    <button class="btn btn-secondary" onclick="showUpdate(event, id)">수정</i></button>
-                    <button onclick="deleteQnaBoard(('${id}'))" type="button" class="btn btn-secondary">삭제</i></button>
+                    <div id="function-buttons"></div>
+
                     <hr/>
                     <ul class="list-group" id="comment-list"></ul>
 
@@ -370,6 +323,27 @@
 
     </div>
 
+    <div class="modal fade" id="updateCommentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <input id="modalComment-id" hidden/>
+                            <input id="modalQna-id" hidden/>
+                            <label for="comment-text" class="col-form-label">댓글</label>
+                            <textarea class="form-control" id="comment-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-light btn-sm" onclick="saveUpdateQnaComment()" >수정</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 

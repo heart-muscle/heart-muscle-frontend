@@ -96,7 +96,6 @@
                 "content": $("#content").val(),
                 "username": localStorage.getItem("username")
             }
-            console.log(data)
             $.ajax({
                 type: "POST",
                 url: apiUrl + `/qna`,
@@ -115,7 +114,6 @@
 
         function mypage() {
             username = localStorage.getItem('username')
-            console.log(username)
             window.location.href = 'profile.html?id=' + username
         }
 
