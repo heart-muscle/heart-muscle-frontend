@@ -126,7 +126,7 @@
         }
         function checkSignup() {
             $.ajax({ type: 'POST',
-                url: apiUrl + '/checkSignup',
+                url: apiUrl + '/user/availability',
                 data: { "id" : $('#username').val() },
                 success: function(data) {
                     console.log(data)

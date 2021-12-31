@@ -35,6 +35,15 @@
     <!--  apiURL-->
     <script src="/js/apiUrl.js"></script>
 
+<!--    &lt;!&ndash; pagination &ndash;&gt;-->
+<!--    <script src="/js/jquery.twbsPagination.js"></script>-->
+<!--    <script src="/js/pagination.js"></script>-->
+
+
+
+
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>-->
+
     <style>
 
         .b_inner .contents_box{
@@ -42,56 +51,40 @@
             display: flex;
             justify-content: center;
         }
+
+        .paging-div {
+            padding: 15px 0 5px 10px;
+            display: table;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+
     </style>
     <script>
 
 
         $(document).ready(function () {
-            getQna();
+            showQna();
         });
 
 
+        function makeQnaList(qnaList) {
 
-        function getQna() {
-            let tag = $("#searchTag").val();
-            $.ajax({
-                type: "GET",
-                url: apiUrl + `/qna`,
-                contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    // $("#list-post").empty();
-                    for (let i = 0; i < response.length; i++) {
-                        console.log(response)
-                        num = response.length - i;
-                        console.log(num)
-                        makeQnaList(response[i], num);
-                    }
-                }
-            })
-        }
-
-        function makeQnaList(article, index) {
-            // let tags = '';
-            // for(let i = 0 ;  i < article['tags'].length ; i++){
-            //     console.log(article['tags'][i]);
-            //     tags += " #"+ article['tags'][i]['name'];
-            // }
-
-            let tempHtml = ` <tr>
-                      <th scope="row">${index}</th>
-                      <td>${article['createdAt']}</td>
-                      <td>${article['username']}</td>
-                      <td><a href="qna-detail.html?id=${article['id']}">${article['title']}</td>
+            return ` <tr>
+                      <th scope="row">${qnaList['id']}</th>
+                      <td>${qnaList['createdAt']}</td>
+                      <td>${qnaList['user']['username']}</td>
+                      <td><a href="qna-detail.html?id=${qnaList['id']}">${qnaList['title']}</td>
 
                       </tr>
                     `;
-            $("#post_table").append(tempHtml);
         }
 
 
 
         function showDetail(id) {
-            console.log(id)
             window.location.href='qna-detail.html?id='+id
         }
 
@@ -121,9 +114,53 @@
 
         function mypage() {
             username = localStorage.getItem('username')
-            console.log(username)
             window.location.href = 'profile.html?id=' + username
         }
+
+
+
+
+
+        function showQna() {
+
+            var sorting = $("#sorting option:selected").val();
+            var isAsc = $(':radio[name="isAsc"]:checked').val();
+            $('#pagination').pagination({
+                dataSource: apiUrl + `/qna?sortBy=${sorting}&isAsc=${isAsc}`,
+                locator: 'content',
+                alias: {
+                    pageNumber: 'page',
+                    pageSize: 'size'
+                },
+                totalNumberLocator: (response) => {
+                    return response.totalElements;
+                },
+                pageRange: 4,
+                pageSize: 10,
+                showPrevious: true,
+                showNext: true,
+                showPageNumbers: true,
+                ajax: {
+                    beforeSend: function() {
+                        $('#showQnaList').html('상품 불러오는 중...');
+                    }
+                },
+                callback: function(data, pagination) {
+                    $('#post_table').empty();
+                    for (let i = 0; i < data.length; i++) {
+                        let list = data[i];
+                        let tempHtml = makeQnaList(list);
+                        $('#post_table').append(tempHtml);
+                    }
+                }
+            });
+
+
+        }
+
+
+
+
 
     </script>
 </head>
@@ -157,7 +194,7 @@
                     <div class="row">
                         <div class="wrap" style="width:900px;margin:auto">
                             <a class="button is-light" id="create-button" onclick="window.location.href='qna-create.html'"
-                               href="#" role="button"><i class="fas fa-pen-square"></i></a>
+                               href="#" role="button">질문 작성</a>
 
                             <table class="table" id="table-box">
                                 <thead>
@@ -173,7 +210,23 @@
                                 <tbody id="post_table">
 
                                 </tbody>
+
                             </table>
+                            <div id="see-area">
+                                <div class="pagination">
+                                    정렬:
+                                    <select id="sorting" onchange="showQna()">
+                                        <option value="id">번호</option>
+                                        <option value="title">제목</option>
+                                        <option value="createdAt">작성일</option>
+                                    </select>
+                                    <input type="radio" name="isAsc" value="true" onchange="showQna()" checked /> 오름차순
+                                    <input type="radio" name="isAsc" value="false" onchange="showQna()" /> 내림차순
+                                </div>
+                                <div id="pagination" class="pagination"></div>
+                                <ul id="product-container">
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -274,6 +327,9 @@
 
 <script src="https://kit.fontawesome.com/1943f1cfcb.js" crossorigin="anonymous"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
 
 <!--<script src="js/insta.js"></script>-->
 </body>
